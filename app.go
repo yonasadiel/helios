@@ -12,8 +12,6 @@ import (
 // Helios is the core of the apps
 type Helios struct {
 	models []interface{}
-	DB     *gorm.DB
-	DBErr  error
 	store  *sessions.CookieStore
 }
 
@@ -21,14 +19,20 @@ type Helios struct {
 // and be the core of the server
 var App Helios
 
+// DB is pointer to gorm.DB that can be used
+// directly for ORM and database
+var DB *gorm.DB
+
 // Initialize the database to production database
-func (app *Helios) Initialize() {
-	app.DB, app.DBErr = gorm.Open("sqlite3", "db.sqlite3")
-	if app.DBErr != nil {
-		panic(app.DBErr)
+func (app *Helios) Initialize() error {
+	var err error
+	DB, err = gorm.Open("sqlite3", "db.sqlite3")
+	if err != nil {
+		return err
 	}
 	key := []byte(os.Getenv("HELIOS_SECRET"))
 	app.store = sessions.NewCookieStore(key)
+	return nil
 }
 
 // RegisterModel so the database will be migrated
@@ -38,28 +42,29 @@ func (app *Helios) RegisterModel(model interface{}) {
 
 // CloseDB close the database connection
 func (app *Helios) CloseDB() {
-	app.DB.Close()
+	DB.Close()
 }
 
 // Migrate migrate all the models
 func (app *Helios) Migrate() {
 	for _, model := range app.models {
-		app.DB.AutoMigrate(model)
+		DB.AutoMigrate(model)
 	}
 }
 
 // BeforeTest has to be called everytime a test is run
 // It will reset the database
 func (app *Helios) BeforeTest() {
-	if app.DB == nil {
-		app.DB, app.DBErr = gorm.Open("sqlite3", ":memory:")
-		if app.DBErr != nil {
-			panic(app.DBErr)
+	if DB == nil {
+		var err error
+		DB, err = gorm.Open("sqlite3", ":memory:")
+		if err != nil {
+			panic(err)
 		}
 		app.Migrate()
 	} else {
 		for _, model := range app.models {
-			app.DB.Unscoped().Delete(model, "true")
+			DB.Unscoped().Delete(model, "true")
 		}
 	}
 }
