@@ -63,7 +63,7 @@ func (req *HTTPRequest) SetContextData(key string, value interface{}) {
 
 // SaveSession saves the session to the cookie
 func (req *HTTPRequest) SaveSession() {
-	req.s.Save(req.r, req.w)
+	req.s.Save(req.r, req.w) // nolint:errcheck
 }
 
 // SendJSON write json as http response
@@ -72,7 +72,7 @@ func (req *HTTPRequest) SendJSON(output interface{}, code int) {
 
 	req.w.Header().Set("Content-Type", "application/json")
 	req.w.WriteHeader(code)
-	req.w.Write(response)
+	req.w.Write(response) // nolint:errcheck
 }
 
 // MockRequest is Request object that is mocked for testing purposes
