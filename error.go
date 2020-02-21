@@ -4,6 +4,7 @@ import "net/http"
 
 // APIError is standardized error of Charon app
 type APIError struct {
+	error
 	StatusCode int
 	Code       string
 	Message    string
@@ -24,4 +25,12 @@ var ErrInternalServerError = APIError{
 	StatusCode: http.StatusInternalServerError,
 	Code:       "internal_server_error",
 	Message:    "Error occured while processing the request",
+}
+
+// ErrUnsupportedContentType returned when request has content-type
+// header that is unsupported
+var ErrUnsupportedContentType = APIError{
+	StatusCode: http.StatusUnsupportedMediaType,
+	Code:       "unsupported_content_type",
+	Message:    "Currently, we are accepting application/json only",
 }

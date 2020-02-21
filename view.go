@@ -3,6 +3,7 @@ package helios
 import (
 	"encoding/json"
 	"net/http"
+	"reflect"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -10,11 +11,12 @@ import (
 
 // Request interface of Helios Http Request Wrapper
 type Request interface {
-	GetRequestData() map[string]string
-	GetContextData(key string) interface{}
-	GetSessionData(key string) interface{}
+	DeserializeRequestData(obj interface{}) error
 
+	GetContextData(key string) interface{}
 	SetContextData(key string, value interface{})
+
+	GetSessionData(key string) interface{}
 	SetSessionData(key string, value interface{})
 	SaveSession()
 
@@ -36,9 +38,24 @@ type HTTPRequest struct {
 	c map[string]interface{}
 }
 
-// GetRequestData return the data of request
-func (req *HTTPRequest) GetRequestData() map[string]string {
+// GetURLVars return the parameter of the request url
+func (req *HTTPRequest) GetURLVars() map[string]string {
 	return mux.Vars(req.r)
+}
+
+// DeserializeRequestData deserializes the request body
+// and parse it into pointer to struct
+func (req *HTTPRequest) DeserializeRequestData(obj interface{}) error {
+	contentType := req.r.Header.Get("Content-Type")
+	if contentType == "application/json" || contentType == "" {
+		decoder := json.NewDecoder(req.r.Body)
+		err := decoder.Decode(obj)
+		if err != nil {
+			return ErrUnsupportedContentType
+		}
+		return nil
+	}
+	return ErrUnsupportedContentType
 }
 
 // GetSessionData return the data of session with known key
@@ -77,21 +94,23 @@ func (req *HTTPRequest) SendJSON(output interface{}, code int) {
 
 // MockRequest is Request object that is mocked for testing purposes
 type MockRequest struct {
-	RequestData  map[string]string
+	RequestData  interface{}
 	SessionData  map[string]interface{}
 	ContextData  map[string]interface{}
 	JSONResponse []byte
 	StatusCode   int
 }
 
-// GetRequestData return the data of request
-func (req *MockRequest) GetRequestData() map[string]string {
-	return req.RequestData
+// DeserializeRequestData return the data of request
+func (req *MockRequest) DeserializeRequestData(obj interface{}) error {
+	result := reflect.ValueOf(obj).Elem()
+	result.Set(reflect.ValueOf(req.RequestData))
+	return nil
 }
 
 // SetRequestData set the data of session
-func (req *MockRequest) SetRequestData(key string, value string) {
-	req.RequestData[key] = value
+func (req *MockRequest) SetRequestData(requestData interface{}) {
+	req.RequestData = requestData
 }
 
 // GetSessionData return the data of session with known key

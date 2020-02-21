@@ -9,18 +9,28 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type sampleRequest struct {
+	A string `json:"a"`
+	B int    `json:"b"`
+	C bool   `json:"c"`
+	D string `json:"d"`
+	E int    `json:"e"`
+	F bool   `json:"f"`
+}
+
 func TestMockRequest(t *testing.T) {
 	App.BeforeTest()
 
 	req := NewMockRequest()
 
-	req.SetRequestData("abc", "def")
-	req.SetRequestData("abc", "ghi")
+	var expected sampleRequest = sampleRequest{A: "def"}
+	var actual sampleRequest
 
-	data := req.GetRequestData()
-	expected := make(map[string]string)
-	expected["abc"] = "ghi"
-	assert.Equal(t, expected, data, "Differenet request data")
+	req.SetRequestData(expected)
+
+	err := req.DeserializeRequestData(&actual)
+	assert.Nil(t, err, "Failed to deserialize request data")
+	assert.Equal(t, expected, actual, "Differenet request data")
 
 	req.SetContextData("abc", 2)
 	req.SetContextData("abc", 3)
@@ -33,17 +43,23 @@ func TestMockRequest(t *testing.T) {
 	req.SetSessionData("abc", 4)
 	req.SetSessionData("abc", 5)
 	req.SetSessionData("def", true)
+	req.SaveSession()
 
 	assert.Equal(t, 5, req.GetSessionData("abc"), "Fail to use session data")
 	assert.Equal(t, true, req.GetSessionData("def"), "Fail to use session data")
 	assert.Nil(t, req.GetSessionData("ghi"), "Session data with unexist key should return nil")
+
+	req.SendJSON(sampleRequest{A: "abcde", B: 2, C: true}, 499)
+	expectedResponse := "{\"a\":\"abcde\",\"b\":2,\"c\":true,\"d\":\"\",\"e\":0,\"f\":false}"
+	assert.Equal(t, expectedResponse, string(req.JSONResponse), "Different JSON Response")
+	assert.Equal(t, 499, req.StatusCode, "Different Response status code")
 }
 
-func TestHTTPRequest(t *testing.T) {
+func TestHTTPRequestJSONEncoded(t *testing.T) {
 	App.BeforeTest()
 
-	request, _ := http.NewRequest("POST", "/def", strings.NewReader("abc=ghi&def=jkl"))
-	request.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
+	request, _ := http.NewRequest("POST", "/def", strings.NewReader("{\"a\":\"abcde\",\"b\":2,\"c\":true}"))
+	request.Header.Set("Content-Type", "application/json")
 	recorder := httptest.NewRecorder()
 	req := HTTPRequest{
 		r: request,
@@ -52,8 +68,86 @@ func TestHTTPRequest(t *testing.T) {
 		c: make(map[string]interface{}),
 	}
 
-	data := req.GetRequestData()
-	expected := make(map[string]string)
-	expected["abc"] = "ghi"
-	assert.Equal(t, expected, data, "Differenet request data")
+	var requestData sampleRequest
+
+	err := req.DeserializeRequestData(&requestData)
+	assert.Nil(t, err, "Fail on deserializing request data")
+	assert.Equal(t, "abcde", requestData.A, "Different string request data")
+	assert.Equal(t, 2, requestData.B, "Different integer request data")
+	assert.Equal(t, true, requestData.C, "Different boolean request data")
+	assert.Equal(t, "", requestData.D, "Different empty string request data")
+	assert.Equal(t, 0, requestData.E, "Different empty integer request data")
+	assert.Equal(t, false, requestData.F, "Different empty boolean request data")
+}
+
+func TestHTTPRequestJSONPoorlyEncoded(t *testing.T) {
+	App.BeforeTest()
+
+	request, _ := http.NewRequest("POST", "/def", strings.NewReader("{\"a\":\"abcde\",\"b\":2,\"c\":true"))
+	request.Header.Set("Content-Type", "application/json")
+	recorder := httptest.NewRecorder()
+	req := HTTPRequest{
+		r: request,
+		w: recorder,
+		s: nil,
+		c: make(map[string]interface{}),
+	}
+
+	var requestData sampleRequest
+
+	err := req.DeserializeRequestData(&requestData)
+	assert.Equal(t, ErrUnsupportedContentType, err, "Poorly encoded JSON should return Unsupported Content Type error")
+}
+
+func TestHTTPRequestUrlFormEncoded(t *testing.T) {
+	App.BeforeTest()
+
+	request, _ := http.NewRequest("POST", "/def", strings.NewReader("a=abcde&b=2&c=true}"))
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	recorder := httptest.NewRecorder()
+	req := HTTPRequest{
+		r: request,
+		w: recorder,
+		s: nil,
+		c: make(map[string]interface{}),
+	}
+
+	var requestData sampleRequest
+
+	err := req.DeserializeRequestData(&requestData)
+	assert.Equal(t, ErrUnsupportedContentType, err, "application/x-www-form-urlencoded is not supported yet")
+}
+
+func TestHTTPRequestMultipartFormData(t *testing.T) {
+	App.BeforeTest()
+
+	request, _ := http.NewRequest("POST", "/def", strings.NewReader(`
+	-----------------------------9051914041544843365972754266
+	Content-Disposition: form-data; name="a"
+
+	abcde
+	-----------------------------9051914041544843365972754266
+	Content-Disposition: form-data; name="b"
+
+	2
+	-----------------------------9051914041544843365972754266
+	Content-Disposition: form-data; name="c"
+
+	true
+
+	-----------------------------9051914041544843365972754266-
+	`))
+	request.Header.Set("Content-Type", "multipart/form-data")
+	recorder := httptest.NewRecorder()
+	req := HTTPRequest{
+		r: request,
+		w: recorder,
+		s: nil,
+		c: make(map[string]interface{}),
+	}
+
+	var requestData sampleRequest
+
+	err := req.DeserializeRequestData(&requestData)
+	assert.Equal(t, ErrUnsupportedContentType, err, "multipart/form-data is not supported yet")
 }
