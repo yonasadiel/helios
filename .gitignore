@@ -1,0 +1,5 @@
+.env
+bin
+coverage.html
+coverage.out
+db.sqlite3
