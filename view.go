@@ -129,6 +129,9 @@ func (req *MockRequest) SetURLParam(key string, value string) {
 
 // DeserializeRequestData return the data of request
 func (req *MockRequest) DeserializeRequestData(obj interface{}) *APIError {
+	if obj == nil {
+		return &ErrUnsupportedContentType
+	}
 	result := reflect.ValueOf(obj).Elem()
 	result.Set(reflect.ValueOf(req.RequestData))
 	return nil

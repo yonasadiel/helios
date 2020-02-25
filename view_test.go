@@ -36,6 +36,9 @@ func TestMockRequest(t *testing.T) {
 	assert.Nil(t, err, "Failed to deserialize request data")
 	assert.Equal(t, expected, actual, "Differenet request data")
 
+	err = req.DeserializeRequestData(nil)
+	assert.NotNil(t, err, "If called with nil, DeserializeRequestData purposely throw error")
+
 	req.SetContextData("abc", 2)
 	req.SetContextData("abc", 3)
 	req.SetContextData("def", "ghi")
