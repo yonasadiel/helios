@@ -11,7 +11,9 @@ import (
 
 // Request interface of Helios Http Request Wrapper
 type Request interface {
-	DeserializeRequestData(obj interface{}) error
+	DeserializeRequestData(obj interface{}) *APIError
+
+	GetURLParam(key string) string
 
 	GetContextData(key string) interface{}
 	SetContextData(key string, value interface{})
@@ -31,31 +33,33 @@ type HTTPHandler func(Request)
 // w is the HTTP Response writer, to write HTTP reply
 // s is the session of current request, using gorilla/sessions package
 // c is the context of the current request, can be used for user data, etc
+// u is the url params argument
 type HTTPRequest struct {
 	r *http.Request
 	w http.ResponseWriter
 	s *sessions.Session
 	c map[string]interface{}
+	u map[string]string
 }
 
-// GetURLVars return the parameter of the request url
-func (req *HTTPRequest) GetURLVars() map[string]string {
-	return mux.Vars(req.r)
+// GetURLParam return the parameter of the request url
+func (req *HTTPRequest) GetURLParam(key string) string {
+	return req.u[key]
 }
 
 // DeserializeRequestData deserializes the request body
 // and parse it into pointer to struct
-func (req *HTTPRequest) DeserializeRequestData(obj interface{}) error {
+func (req *HTTPRequest) DeserializeRequestData(obj interface{}) *APIError {
 	contentType := req.r.Header.Get("Content-Type")
 	if contentType == "application/json" || contentType == "" {
 		decoder := json.NewDecoder(req.r.Body)
 		err := decoder.Decode(obj)
 		if err != nil {
-			return ErrUnsupportedContentType
+			return &ErrUnsupportedContentType
 		}
 		return nil
 	}
-	return ErrUnsupportedContentType
+	return &ErrUnsupportedContentType
 }
 
 // GetSessionData return the data of session with known key
@@ -92,6 +96,17 @@ func (req *HTTPRequest) SendJSON(output interface{}, code int) {
 	req.w.Write(response) // nolint:errcheck
 }
 
+// NewHTTPRequest wraps usual http request and response writer to HTTPRequest struct
+func NewHTTPRequest(w http.ResponseWriter, r *http.Request) HTTPRequest {
+	return HTTPRequest{
+		r: r,
+		w: w,
+		s: App.getSession(r),
+		c: make(map[string]interface{}),
+		u: mux.Vars(r),
+	}
+}
+
 // MockRequest is Request object that is mocked for testing purposes
 type MockRequest struct {
 	RequestData  interface{}
@@ -99,10 +114,21 @@ type MockRequest struct {
 	ContextData  map[string]interface{}
 	JSONResponse []byte
 	StatusCode   int
+	URLParam     map[string]string
+}
+
+// GetURLParam returns the url param of given key
+func (req *MockRequest) GetURLParam(key string) string {
+	return req.URLParam[key]
+}
+
+// SetURLParam returns the url param of given key
+func (req *MockRequest) SetURLParam(key string, value string) {
+	req.URLParam[key] = value
 }
 
 // DeserializeRequestData return the data of request
-func (req *MockRequest) DeserializeRequestData(obj interface{}) error {
+func (req *MockRequest) DeserializeRequestData(obj interface{}) *APIError {
 	result := reflect.ValueOf(obj).Elem()
 	result.Set(reflect.ValueOf(req.RequestData))
 	return nil
@@ -155,5 +181,6 @@ func NewMockRequest() MockRequest {
 		SessionData: make(map[string]interface{}),
 		RequestData: make(map[string]string),
 		ContextData: make(map[string]interface{}),
+		URLParam:    make(map[string]string),
 	}
 }

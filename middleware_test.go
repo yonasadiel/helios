@@ -46,22 +46,6 @@ func TestMiddlewareOrder(t *testing.T) {
 	assert.Equal(t, "m3", order[2], "First middleware to be executed should be m3")
 }
 
-func TestWrapHTTPRequest(t *testing.T) {
-	App.BeforeTest()
-
-	recorder := httptest.NewRecorder()
-	response := []byte("abc")
-	request, _ := http.NewRequest("GET", "/def", nil)
-	req := wrapHTTPRequest(recorder, request)
-	_, err := req.w.Write(response)
-	assert.Nil(t, err, "Fail on writing response")
-	actualResponse := make([]byte, 5)
-	n, err := recorder.Result().Body.Read(actualResponse)
-	assert.Nil(t, err, "Fail on reading body")
-	assert.Equal(t, n, 3, "Different number of bytes")
-	assert.Equal(t, []byte{0x61, 0x62, 0x63, 0x0, 0x0}, actualResponse, "Different body")
-}
-
 func TestHandle(t *testing.T) {
 	App.BeforeTest()
 

@@ -23,6 +23,10 @@ func TestMockRequest(t *testing.T) {
 
 	req := NewMockRequest()
 
+	req.SetURLParam("abc", "def")
+	assert.Equal(t, "def", req.GetURLParam("abc"), "Failed to retrieve url param")
+	assert.Equal(t, "", req.GetURLParam("def"), "Not found url param should return empty string")
+
 	var expected sampleRequest = sampleRequest{A: "def"}
 	var actual sampleRequest
 
@@ -55,6 +59,51 @@ func TestMockRequest(t *testing.T) {
 	assert.Equal(t, 499, req.StatusCode, "Different Response status code")
 }
 
+func TestNewHTTPRequest(t *testing.T) {
+	App.BeforeTest()
+
+	recorder := httptest.NewRecorder()
+	response := []byte("abc")
+	request, _ := http.NewRequest("GET", "/def", nil)
+	req := NewHTTPRequest(recorder, request)
+	_, err := req.w.Write(response)
+	assert.Nil(t, err, "Fail on writing response")
+	actualResponse := make([]byte, 5)
+	n, err := recorder.Result().Body.Read(actualResponse)
+	assert.Nil(t, err, "Fail on reading body")
+	assert.Equal(t, n, 3, "Different number of bytes")
+	assert.Equal(t, []byte{0x61, 0x62, 0x63, 0x0, 0x0}, actualResponse, "Different body")
+}
+
+func TestHTTPRequest(t *testing.T) {
+	App.BeforeTest()
+
+	request, _ := http.NewRequest("POST", "/def", strings.NewReader("{\"a\":\"abcde\",\"b\":2,\"c\":true}"))
+	request.Header.Set("Content-Type", "application/json")
+	recorder := httptest.NewRecorder()
+
+	urlParam := make(map[string]string)
+	urlParam["id"] = "3"
+
+	contextData := make(map[string]interface{})
+	contextData["abc"] = "random_context_data"
+	contextData["def"] = "def"
+
+	req := HTTPRequest{
+		r: request,
+		w: recorder,
+		s: nil,
+		c: contextData,
+		u: urlParam,
+	}
+	req.SetContextData("def", "ghi")
+
+	assert.Equal(t, "3", req.GetURLParam("id"), "Failed to retrive url param")
+	assert.Equal(t, "random_context_data", req.GetContextData("abc"), "Failed to retrive context data")
+	assert.Equal(t, "ghi", req.GetContextData("def"), "Failed to retrive modified context data")
+	assert.Nil(t, req.GetContextData("ghi"), "Missing context data should treated as nil")
+}
+
 func TestHTTPRequestJSONEncoded(t *testing.T) {
 	App.BeforeTest()
 
@@ -66,6 +115,7 @@ func TestHTTPRequestJSONEncoded(t *testing.T) {
 		w: recorder,
 		s: nil,
 		c: make(map[string]interface{}),
+		u: make(map[string]string),
 	}
 
 	var requestData sampleRequest
@@ -91,12 +141,13 @@ func TestHTTPRequestJSONPoorlyEncoded(t *testing.T) {
 		w: recorder,
 		s: nil,
 		c: make(map[string]interface{}),
+		u: make(map[string]string),
 	}
 
 	var requestData sampleRequest
 
 	err := req.DeserializeRequestData(&requestData)
-	assert.Equal(t, ErrUnsupportedContentType, err, "Poorly encoded JSON should return Unsupported Content Type error")
+	assert.Equal(t, &ErrUnsupportedContentType, err, "Poorly encoded JSON should return Unsupported Content Type error")
 }
 
 func TestHTTPRequestUrlFormEncoded(t *testing.T) {
@@ -110,12 +161,13 @@ func TestHTTPRequestUrlFormEncoded(t *testing.T) {
 		w: recorder,
 		s: nil,
 		c: make(map[string]interface{}),
+		u: make(map[string]string),
 	}
 
 	var requestData sampleRequest
 
 	err := req.DeserializeRequestData(&requestData)
-	assert.Equal(t, ErrUnsupportedContentType, err, "application/x-www-form-urlencoded is not supported yet")
+	assert.Equal(t, &ErrUnsupportedContentType, err, "application/x-www-form-urlencoded is not supported yet")
 }
 
 func TestHTTPRequestMultipartFormData(t *testing.T) {
@@ -144,10 +196,11 @@ func TestHTTPRequestMultipartFormData(t *testing.T) {
 		w: recorder,
 		s: nil,
 		c: make(map[string]interface{}),
+		u: make(map[string]string),
 	}
 
 	var requestData sampleRequest
 
 	err := req.DeserializeRequestData(&requestData)
-	assert.Equal(t, ErrUnsupportedContentType, err, "multipart/form-data is not supported yet")
+	assert.Equal(t, &ErrUnsupportedContentType, err, "multipart/form-data is not supported yet")
 }

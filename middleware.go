@@ -15,20 +15,10 @@ func WithMiddleware(f HTTPHandler, m []Middleware) func(http.ResponseWriter, *ht
 	return handle(wrapped)
 }
 
-// wrapHTTPRequest wrap the usual http.Request to Helios' HTTPRequest object
-func wrapHTTPRequest(w http.ResponseWriter, r *http.Request) HTTPRequest {
-	var req HTTPRequest
-	req.r = r
-	req.s = App.getSession(r)
-	req.w = w
-
-	return req
-}
-
 // handle the http request using the HTTPHandler, without middleware
 func handle(f HTTPHandler) func(http.ResponseWriter, *http.Request) {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var req HTTPRequest = wrapHTTPRequest(w, r)
+		var req HTTPRequest = NewHTTPRequest(w, r)
 		f(&req)
 	})
 }
