@@ -2,8 +2,10 @@ package helios
 
 import (
 	"encoding/json"
+	"net"
 	"net/http"
 	"reflect"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -21,6 +23,8 @@ type Request interface {
 	GetSessionData(key string) interface{}
 	SetSessionData(key string, value interface{})
 	SaveSession()
+
+	ClientIP() string
 
 	SendJSON(output interface{}, code int)
 }
@@ -40,6 +44,17 @@ type HTTPRequest struct {
 	s *sessions.Session
 	c map[string]interface{}
 	u map[string]string
+}
+
+// NewHTTPRequest wraps usual http request and response writer to HTTPRequest struct
+func NewHTTPRequest(w http.ResponseWriter, r *http.Request) HTTPRequest {
+	return HTTPRequest{
+		r: r,
+		w: w,
+		s: App.getSession(r),
+		c: make(map[string]interface{}),
+		u: mux.Vars(r),
+	}
 }
 
 // GetURLParam return the parameter of the request url
@@ -96,15 +111,26 @@ func (req *HTTPRequest) SendJSON(output interface{}, code int) {
 	req.w.Write(response) // nolint:errcheck
 }
 
-// NewHTTPRequest wraps usual http request and response writer to HTTPRequest struct
-func NewHTTPRequest(w http.ResponseWriter, r *http.Request) HTTPRequest {
-	return HTTPRequest{
-		r: r,
-		w: w,
-		s: App.getSession(r),
-		c: make(map[string]interface{}),
-		u: mux.Vars(r),
+// ClientIP returns the original ip address of the request.
+// First, it checks for X-Forwarded-For and X-Real-Ip http header
+// (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For)
+// If they are not present, return the http.Request.RemoteAddr
+// The priority is: X-Forwarded-For, X-Real-Ip, RemoteAddr
+func (req *HTTPRequest) ClientIP() string {
+	clientIP := req.r.Header.Get("X-Forwarded-For")
+	clientIP = strings.TrimSpace(strings.Split(clientIP, ",")[0])
+	if clientIP == "" {
+		clientIP = strings.TrimSpace(req.r.Header.Get("X-Real-Ip"))
 	}
+	if clientIP != "" {
+		return clientIP
+	}
+
+	if ip, _, err := net.SplitHostPort(strings.TrimSpace(req.r.RemoteAddr)); err == nil {
+		return ip
+	}
+
+	return ""
 }
 
 // MockRequest is Request object that is mocked for testing purposes
@@ -115,16 +141,24 @@ type MockRequest struct {
 	JSONResponse []byte
 	StatusCode   int
 	URLParam     map[string]string
+	RemoteAddr   string
+}
+
+// NewMockRequest returns new MockRequest with empty data
+// RemoteAddr is set to 127.0.0.1 in default
+func NewMockRequest() MockRequest {
+	return MockRequest{
+		SessionData: make(map[string]interface{}),
+		RequestData: make(map[string]string),
+		ContextData: make(map[string]interface{}),
+		URLParam:    make(map[string]string),
+		RemoteAddr:  "127.0.0.1",
+	}
 }
 
 // GetURLParam returns the url param of given key
 func (req *MockRequest) GetURLParam(key string) string {
 	return req.URLParam[key]
-}
-
-// SetURLParam returns the url param of given key
-func (req *MockRequest) SetURLParam(key string, value string) {
-	req.URLParam[key] = value
 }
 
 // DeserializeRequestData return the data of request
@@ -135,11 +169,6 @@ func (req *MockRequest) DeserializeRequestData(obj interface{}) *APIError {
 	result := reflect.ValueOf(obj).Elem()
 	result.Set(reflect.ValueOf(req.RequestData))
 	return nil
-}
-
-// SetRequestData set the data of session
-func (req *MockRequest) SetRequestData(requestData interface{}) {
-	req.RequestData = requestData
 }
 
 // GetSessionData return the data of session with known key
@@ -178,12 +207,7 @@ func (req *MockRequest) SendJSON(output interface{}, code int) {
 	}
 }
 
-// NewMockRequest returns new MockRequest with empty data
-func NewMockRequest() MockRequest {
-	return MockRequest{
-		SessionData: make(map[string]interface{}),
-		RequestData: make(map[string]string),
-		ContextData: make(map[string]interface{}),
-		URLParam:    make(map[string]string),
-	}
+// ClientIP returns RemoteAddr data of req
+func (req *MockRequest) ClientIP() string {
+	return req.RemoteAddr
 }

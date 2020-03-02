@@ -23,18 +23,18 @@ func TestMockRequest(t *testing.T) {
 
 	req := NewMockRequest()
 
-	req.SetURLParam("abc", "def")
+	req.URLParam["abc"] = "def"
 	assert.Equal(t, "def", req.GetURLParam("abc"), "Failed to retrieve url param")
 	assert.Equal(t, "", req.GetURLParam("def"), "Not found url param should return empty string")
 
 	var expected sampleRequest = sampleRequest{A: "def"}
 	var actual sampleRequest
 
-	req.SetRequestData(nil)
+	req.RequestData = nil
 	errDeserialize1 := req.DeserializeRequestData(&actual)
 	assert.NotNil(t, errDeserialize1, "If request data is nil, DeserializeRequestData purposely throw error")
 
-	req.SetRequestData(expected)
+	req.RequestData = expected
 	errDeserialize2 := req.DeserializeRequestData(&actual)
 	assert.Nil(t, errDeserialize2, "Failed to deserialize request data")
 	assert.Equal(t, expected, actual, "Differenet request data")
@@ -60,6 +60,10 @@ func TestMockRequest(t *testing.T) {
 	expectedResponse := "{\"a\":\"abcde\",\"b\":2,\"c\":true,\"d\":\"\",\"e\":0,\"f\":false}"
 	assert.Equal(t, expectedResponse, string(req.JSONResponse), "Different JSON Response")
 	assert.Equal(t, 499, req.StatusCode, "Different Response status code")
+
+	assert.Equal(t, "127.0.0.1", req.ClientIP(), "Default for ClientIP is 127.0.0.1")
+	req.RemoteAddr = "1.2.3.4"
+	assert.Equal(t, "1.2.3.4", req.ClientIP(), "ClientIP() should returns the RemoteAddr attribute")
 }
 
 func TestNewHTTPRequest(t *testing.T) {
@@ -206,4 +210,53 @@ func TestHTTPRequestMultipartFormData(t *testing.T) {
 
 	err := req.DeserializeRequestData(&requestData)
 	assert.Equal(t, &ErrUnsupportedContentType, err, "multipart/form-data is not supported yet")
+}
+
+func TestHTTPRequestClientIP(t *testing.T) {
+	App.BeforeTest()
+
+	requestXFF, _ := http.NewRequest("POST", "/def", nil)
+	requestXFF.Header.Set("X-Forwarded-For", "1.2.3.4, 5.6.7.8")
+	requestXFF.Header.Set("X-Real-Ip", "11.22.33.44")
+	requestXFF.RemoteAddr = "55.66.77.88:12345"
+
+	reqXFF := HTTPRequest{
+		r: requestXFF,
+		w: nil,
+		s: nil,
+		c: make(map[string]interface{}),
+		u: make(map[string]string),
+	}
+
+	assert.Equal(t, "1.2.3.4", reqXFF.ClientIP(), "If X-Forwarded-For header is present, ClientIP should return the first entry of the header")
+
+	requestXRI, _ := http.NewRequest("POST", "/def", nil)
+	requestXRI.Header.Set("X-Forwarded-For", "")
+	requestXRI.Header.Set("X-Real-Ip", "11.22.33.44")
+	requestXRI.RemoteAddr = "55.66.77.88:12345"
+
+	reqXRI := HTTPRequest{
+		r: requestXRI,
+		w: nil,
+		s: nil,
+		c: make(map[string]interface{}),
+		u: make(map[string]string),
+	}
+
+	assert.Equal(t, "11.22.33.44", reqXRI.ClientIP(), "If X-Forwarded-For header is not present and X-Real-Ip is present, ClientIP should return the X-Real-Ip")
+
+	requestRemoteAddr, _ := http.NewRequest("POST", "/def", nil)
+	requestRemoteAddr.Header.Set("X-Forwarded-For", "")
+	requestRemoteAddr.Header.Set("X-Real-Ip", "")
+	requestRemoteAddr.RemoteAddr = "55.66.77.88:12345"
+
+	reqRemoteAddr := HTTPRequest{
+		r: requestRemoteAddr,
+		w: nil,
+		s: nil,
+		c: make(map[string]interface{}),
+		u: make(map[string]string),
+	}
+
+	assert.Equal(t, "55.66.77.88", reqRemoteAddr.ClientIP(), "If X-Forwarded-For and X-Real-Ip headers are not present, ClientIP should return RemoteAddr")
 }
