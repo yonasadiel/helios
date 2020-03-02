@@ -18,6 +18,29 @@ type sampleRequest struct {
 	F bool   `json:"f"`
 }
 
+func TestHandle(t *testing.T) {
+	App.BeforeTest()
+
+	recorder := httptest.NewRecorder()
+	request, _ := http.NewRequest("GET", "/def", nil)
+
+	f := func(req Request) {
+		json := make(map[string]int)
+		json["abc"] = 2
+		json["def"] = 3
+		req.SendJSON(json, 201)
+	}
+
+	Handle(f)(recorder, request)
+	actualResponse := make([]byte, 17)
+	expectedResponse := []byte("{\"abc\":2,\"def\":3}")
+	n, err := recorder.Result().Body.Read(actualResponse)
+
+	assert.Nil(t, err, "Fail on reading body")
+	assert.Equal(t, n, len(expectedResponse), "Different number of bytes")
+	assert.Equal(t, expectedResponse, actualResponse, "Different body")
+}
+
 func TestMockRequest(t *testing.T) {
 	App.BeforeTest()
 

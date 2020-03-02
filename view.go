@@ -32,6 +32,14 @@ type Request interface {
 // HTTPHandler receive Helios wrapped request and ressponse
 type HTTPHandler func(Request)
 
+// Handle the http request using the HTTPHandler, without middleware
+func Handle(f HTTPHandler) func(http.ResponseWriter, *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req HTTPRequest = NewHTTPRequest(w, r)
+		f(&req)
+	})
+}
+
 // HTTPRequest wrapper of Helios Http Request
 // r is the HTTP Request, containing request data
 // w is the HTTP Response writer, to write HTTP reply

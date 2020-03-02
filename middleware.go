@@ -12,15 +12,7 @@ type Middleware func(HTTPHandler) HTTPHandler
 // pass it to middleware, start from first middleware in m to the last.
 func WithMiddleware(f HTTPHandler, m []Middleware) func(http.ResponseWriter, *http.Request) {
 	wrapped := makeMiddleware(f, m)
-	return handle(wrapped)
-}
-
-// handle the http request using the HTTPHandler, without middleware
-func handle(f HTTPHandler) func(http.ResponseWriter, *http.Request) {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var req HTTPRequest = NewHTTPRequest(w, r)
-		f(&req)
-	})
+	return Handle(wrapped)
 }
 
 // makeMiddleware chains multiple middleware into new one
