@@ -26,6 +26,7 @@ type Request interface {
 
 	ClientIP() string
 
+	SetHeader(key string, value string)
 	SendJSON(output interface{}, code int)
 }
 
@@ -110,6 +111,11 @@ func (req *HTTPRequest) SaveSession() {
 	req.s.Save(req.r, req.w) // nolint:errcheck
 }
 
+// SetHeader set the header of response writer
+func (req *HTTPRequest) SetHeader(key string, value string) {
+	req.w.Header().Set(key, value)
+}
+
 // SendJSON write json as http response
 func (req *HTTPRequest) SendJSON(output interface{}, code int) {
 	response, _ := json.Marshal(output)
@@ -143,24 +149,26 @@ func (req *HTTPRequest) ClientIP() string {
 
 // MockRequest is Request object that is mocked for testing purposes
 type MockRequest struct {
-	RequestData  interface{}
-	SessionData  map[string]interface{}
-	ContextData  map[string]interface{}
-	JSONResponse []byte
-	StatusCode   int
-	URLParam     map[string]string
-	RemoteAddr   string
+	RequestData    interface{}
+	ResponseHeader map[string]string
+	SessionData    map[string]interface{}
+	ContextData    map[string]interface{}
+	JSONResponse   []byte
+	StatusCode     int
+	URLParam       map[string]string
+	RemoteAddr     string
 }
 
 // NewMockRequest returns new MockRequest with empty data
 // RemoteAddr is set to 127.0.0.1 in default
 func NewMockRequest() MockRequest {
 	return MockRequest{
-		SessionData: make(map[string]interface{}),
-		RequestData: make(map[string]string),
-		ContextData: make(map[string]interface{}),
-		URLParam:    make(map[string]string),
-		RemoteAddr:  "127.0.0.1",
+		SessionData:    make(map[string]interface{}),
+		RequestData:    make(map[string]string),
+		ResponseHeader: make(map[string]string),
+		ContextData:    make(map[string]interface{}),
+		URLParam:       make(map[string]string),
+		RemoteAddr:     "127.0.0.1",
 	}
 }
 
@@ -202,6 +210,11 @@ func (req *MockRequest) SetContextData(key string, value interface{}) {
 // SaveSession do nothing because the session is already saved
 func (req *MockRequest) SaveSession() {
 	//
+}
+
+// SetHeader set the header of response writer
+func (req *MockRequest) SetHeader(key string, value string) {
+	req.ResponseHeader[key] = value
 }
 
 // SendJSON write json as http response

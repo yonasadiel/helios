@@ -68,3 +68,21 @@ func TestWithMiddleware(t *testing.T) {
 	assert.Equal(t, n, len(expectedResponse), "Different number of bytes")
 	assert.Equal(t, expectedResponse, actualResponse, "Different body")
 }
+
+func TestCreateCORSMiddleware(t *testing.T) {
+	m := CreateCORSMiddleware("http://localhost:9001")
+
+	recorder := httptest.NewRecorder()
+	request, _ := http.NewRequest("GET", "/def", nil)
+
+	f := func(req Request) {
+		json := make(map[string]int)
+		json["abc"] = 2
+		json["def"] = 3
+		req.SendJSON(json, 200)
+	}
+
+	WithMiddleware(f, []Middleware{m})(recorder, request)
+
+	assert.Equal(t, "http://localhost:9001", recorder.Header().Get("Access-Control-Allow-Origin"), "Different cors header")
+}

@@ -79,6 +79,11 @@ func TestMockRequest(t *testing.T) {
 	assert.Equal(t, true, req.GetSessionData("def"), "Fail to use session data")
 	assert.Nil(t, req.GetSessionData("ghi"), "Session data with unexist key should return nil")
 
+	req.SetHeader("header-x", "x")
+	req.SetHeader("header-x", "y")
+	assert.Empty(t, req.ResponseHeader["header-y"], "Unset header should return empty string")
+	assert.Equal(t, "y", req.ResponseHeader["header-x"], "Different header set")
+
 	req.SendJSON(sampleRequest{A: "abcde", B: 2, C: true}, 499)
 	expectedResponse := "{\"a\":\"abcde\",\"b\":2,\"c\":true,\"d\":\"\",\"e\":0,\"f\":false}"
 	assert.Equal(t, expectedResponse, string(req.JSONResponse), "Different JSON Response")
@@ -127,6 +132,11 @@ func TestHTTPRequest(t *testing.T) {
 		u: urlParam,
 	}
 	req.SetContextData("def", "ghi")
+
+	req.SetHeader("header-x", "x")
+	req.SetHeader("header-x", "y")
+	assert.Empty(t, req.w.Header().Get("header-y"), "Empty header shoul be empty string")
+	assert.Equal(t, "y", req.w.Header().Get("header-x"), "Different header set")
 
 	assert.Equal(t, "3", req.GetURLParam("id"), "Failed to retrive url param")
 	assert.Equal(t, "random_context_data", req.GetContextData("abc"), "Failed to retrive context data")
@@ -282,4 +292,19 @@ func TestHTTPRequestClientIP(t *testing.T) {
 	}
 
 	assert.Equal(t, "55.66.77.88", reqRemoteAddr.ClientIP(), "If X-Forwarded-For and X-Real-Ip headers are not present, ClientIP should return RemoteAddr")
+
+	requestBadIP, _ := http.NewRequest("POST", "/def", nil)
+	requestBadIP.Header.Set("X-Forwarded-For", "")
+	requestBadIP.Header.Set("X-Real-Ip", "")
+	requestBadIP.RemoteAddr = "55.66.77.88"
+
+	reqBadIP := HTTPRequest{
+		r: requestBadIP,
+		w: nil,
+		s: nil,
+		c: make(map[string]interface{}),
+		u: make(map[string]string),
+	}
+
+	assert.Empty(t, reqBadIP.ClientIP(), "Bad IP format on RemoteAddr will return empty ip")
 }

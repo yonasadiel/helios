@@ -15,6 +15,17 @@ func WithMiddleware(f HTTPHandler, m []Middleware) func(http.ResponseWriter, *ht
 	return Handle(wrapped)
 }
 
+// CreateCORSMiddleware add Access-Control-Allow-Origin headers
+// to the response.
+func CreateCORSMiddleware(allowedOrigin string) Middleware {
+	return func(f HTTPHandler) HTTPHandler {
+		return func(req Request) {
+			req.SetHeader("Access-Control-Allow-Origin", allowedOrigin)
+			f(req)
+		}
+	}
+}
+
 // makeMiddleware chains multiple middleware into new one
 func makeMiddleware(f HTTPHandler, m []Middleware) HTTPHandler {
 	wrapped := f
