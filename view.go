@@ -223,7 +223,7 @@ func (req *MockRequest) SaveSession() {
 
 // GetHeader gets the header of request
 func (req *MockRequest) GetHeader(key string) string {
-	return req.RequestHeader[key]
+	return req.RequestHeader[strings.ToLower(key)]
 }
 
 // SetHeader sets the header of response writer

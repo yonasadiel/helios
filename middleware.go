@@ -17,10 +17,35 @@ func WithMiddleware(f HTTPHandler, m []Middleware) func(http.ResponseWriter, *ht
 
 // CreateCORSMiddleware add Access-Control-Allow-Origin headers
 // to the response.
-func CreateCORSMiddleware(allowedOrigin string) Middleware {
+func CreateCORSMiddleware(allowedOrigins []string) Middleware {
+	var allAllowed bool = false
+	for _, allowedOrigin := range allowedOrigins {
+		if allowedOrigin == "*" {
+			allAllowed = true
+		}
+	}
+
 	return func(f HTTPHandler) HTTPHandler {
 		return func(req Request) {
-			req.SetHeader("Access-Control-Allow-Origin", allowedOrigin)
+			var origin string = req.GetHeader("Origin")
+			var allowed bool = false
+
+			if allAllowed {
+				allowed = true
+			} else {
+				for _, allowedOrigin := range allowedOrigins {
+					if allowedOrigin == origin {
+						allowed = true
+					}
+				}
+			}
+
+			if allowed {
+				req.SetHeader("Access-Control-Allow-Origin", origin)
+			} else {
+				req.SetHeader("Access-Control-Allow-Origin", "")
+			}
+
 			f(req)
 		}
 	}

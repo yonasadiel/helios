@@ -80,8 +80,9 @@ func TestMockRequest(t *testing.T) {
 	assert.Nil(t, req.GetSessionData("ghi"), "Session data with unexist key should return nil")
 
 	req.RequestHeader["header-a"] = "a"
-	assert.Equal(t, "a", req.GetHeader("header-a"), "Different request header value")
 	assert.Empty(t, req.GetHeader("header-b"), "Missing header should return empty string")
+	assert.Equal(t, "a", req.GetHeader("header-a"), "Different request header value")
+	assert.Equal(t, "a", req.GetHeader("HEADER-A"), "Request header should be case insensitive")
 
 	req.SetHeader("header-x", "x")
 	req.SetHeader("header-x", "y")
@@ -140,6 +141,7 @@ func TestHTTPRequest(t *testing.T) {
 
 	assert.Empty(t, req.GetHeader("header-b"), "Missing header should return empty string")
 	assert.Equal(t, "a", req.GetHeader("header-a"), "Different request header returned")
+	assert.Equal(t, "a", req.GetHeader("HEADER-A"), "Header should be case insensitive")
 
 	req.SetHeader("header-x", "x")
 	req.SetHeader("header-x", "y")

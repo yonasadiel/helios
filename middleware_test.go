@@ -70,11 +70,10 @@ func TestWithMiddleware(t *testing.T) {
 }
 
 func TestCreateCORSMiddleware(t *testing.T) {
-	m := CreateCORSMiddleware("http://localhost:9001")
+	strictCORS := CreateCORSMiddleware([]string{"http://localhost:9001", "http://localhost:9002"})
+	wildcardCORS := CreateCORSMiddleware([]string{"*"})
 
-	recorder := httptest.NewRecorder()
 	request, _ := http.NewRequest("GET", "/def", nil)
-
 	f := func(req Request) {
 		json := make(map[string]int)
 		json["abc"] = 2
@@ -82,7 +81,23 @@ func TestCreateCORSMiddleware(t *testing.T) {
 		req.SendJSON(json, 200)
 	}
 
-	WithMiddleware(f, []Middleware{m})(recorder, request)
+	recorder1 := httptest.NewRecorder()
+	request.Header.Set("Origin", "http://localhost:9001")
+	WithMiddleware(f, []Middleware{strictCORS})(recorder1, request)
+	assert.Equal(t, "http://localhost:9001", recorder1.Header().Get("Access-Control-Allow-Origin"), "Fail to allow an origin")
 
-	assert.Equal(t, "http://localhost:9001", recorder.Header().Get("Access-Control-Allow-Origin"), "Different cors header")
+	recorder2 := httptest.NewRecorder()
+	request.Header.Set("Origin", "http://localhost:9002")
+	WithMiddleware(f, []Middleware{strictCORS})(recorder2, request)
+	assert.Equal(t, "http://localhost:9002", recorder2.Header().Get("Access-Control-Allow-Origin"), "Fail to allow another origin")
+
+	recorder3 := httptest.NewRecorder()
+	request.Header.Set("Origin", "http://localhost:9003")
+	WithMiddleware(f, []Middleware{strictCORS})(recorder3, request)
+	assert.Equal(t, "", recorder3.Header().Get("Access-Control-Allow-Origin"), "Fail to disallow an origin")
+
+	recorder4 := httptest.NewRecorder()
+	request.Header.Set("Origin", "http://localhost:9003")
+	WithMiddleware(f, []Middleware{wildcardCORS})(recorder4, request)
+	assert.Equal(t, "http://localhost:9003", recorder4.Header().Get("Access-Control-Allow-Origin"), "Fail to allow an origin on wildcard CORS")
 }
