@@ -1,9 +1,9 @@
 # Helios
 
+<img align="right" src="helios.svg" alt="Helios Logo" width="100px"/>
+
 ![Build Status](https://travis-ci.com/yonasadiel/helios.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/yonasadiel/helios/badge.svg?branch=master)](https://coveralls.io/github/yonasadiel/helios?branch=master)
-
-<img align="right" src="helios.svg" alt="Helios Logo" style="width:100px;"/>
 
 Helios is experimental web apps backbone written in golang.
 
