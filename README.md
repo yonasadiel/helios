@@ -74,4 +74,6 @@ http.HandleFunc("/", WithMiddleware(handler, []Middleware{middleware1, middlewar
 What I am going to do with Helios:
 - Remove gorilla/sessions. It should be the user's choice how to use sessions.
 - Remove gorilla/mux. It should be the user's choice how to parse query.
+- As you see, this library is not yet ready for usage. The database is still hardcoded and only support sqlite.
 - Multiple database connection. For example, an handler may query using read-only database connection, but other handlers use full access database connection
+- At this point, I wonder, what if we just store the map of database, and let user define what is the database.
