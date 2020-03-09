@@ -79,6 +79,10 @@ func TestMockRequest(t *testing.T) {
 	assert.Equal(t, true, req.GetSessionData("def"), "Fail to use session data")
 	assert.Nil(t, req.GetSessionData("ghi"), "Session data with unexist key should return nil")
 
+	req.RequestHeader["header-a"] = "a"
+	assert.Equal(t, "a", req.GetHeader("header-a"), "Different request header value")
+	assert.Empty(t, req.GetHeader("header-b"), "Missing header should return empty string")
+
 	req.SetHeader("header-x", "x")
 	req.SetHeader("header-x", "y")
 	assert.Empty(t, req.ResponseHeader["header-y"], "Unset header should return empty string")
@@ -115,6 +119,7 @@ func TestHTTPRequest(t *testing.T) {
 
 	request, _ := http.NewRequest("POST", "/def", strings.NewReader("{\"a\":\"abcde\",\"b\":2,\"c\":true}"))
 	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("header-a", "a")
 	recorder := httptest.NewRecorder()
 
 	urlParam := make(map[string]string)
@@ -132,6 +137,9 @@ func TestHTTPRequest(t *testing.T) {
 		u: urlParam,
 	}
 	req.SetContextData("def", "ghi")
+
+	assert.Empty(t, req.GetHeader("header-b"), "Missing header should return empty string")
+	assert.Equal(t, "a", req.GetHeader("header-a"), "Different request header returned")
 
 	req.SetHeader("header-x", "x")
 	req.SetHeader("header-x", "y")

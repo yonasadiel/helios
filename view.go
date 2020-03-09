@@ -26,7 +26,9 @@ type Request interface {
 
 	ClientIP() string
 
+	GetHeader(key string) string
 	SetHeader(key string, value string)
+
 	SendJSON(output interface{}, code int)
 }
 
@@ -111,7 +113,12 @@ func (req *HTTPRequest) SaveSession() {
 	req.s.Save(req.r, req.w) // nolint:errcheck
 }
 
-// SetHeader set the header of response writer
+// GetHeader gets the header of request
+func (req *HTTPRequest) GetHeader(key string) string {
+	return req.r.Header.Get(key)
+}
+
+// SetHeader sets the header of response writer
 func (req *HTTPRequest) SetHeader(key string, value string) {
 	req.w.Header().Set(key, value)
 }
@@ -150,6 +157,7 @@ func (req *HTTPRequest) ClientIP() string {
 // MockRequest is Request object that is mocked for testing purposes
 type MockRequest struct {
 	RequestData    interface{}
+	RequestHeader  map[string]string
 	ResponseHeader map[string]string
 	SessionData    map[string]interface{}
 	ContextData    map[string]interface{}
@@ -165,6 +173,7 @@ func NewMockRequest() MockRequest {
 	return MockRequest{
 		SessionData:    make(map[string]interface{}),
 		RequestData:    make(map[string]string),
+		RequestHeader:  make(map[string]string),
 		ResponseHeader: make(map[string]string),
 		ContextData:    make(map[string]interface{}),
 		URLParam:       make(map[string]string),
@@ -212,7 +221,12 @@ func (req *MockRequest) SaveSession() {
 	//
 }
 
-// SetHeader set the header of response writer
+// GetHeader gets the header of request
+func (req *MockRequest) GetHeader(key string) string {
+	return req.RequestHeader[key]
+}
+
+// SetHeader sets the header of response writer
 func (req *MockRequest) SetHeader(key string, value string) {
 	req.ResponseHeader[key] = value
 }
