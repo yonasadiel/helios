@@ -28,11 +28,12 @@ import (
     "github.com/yonasadiel/helios"
 )
 
+type SimpleJSONResponse struct {
+    Code    string `json:"code"`
+    Message string `json:"message"`
+}
+
 func SimpleJSONHttpHandler(req helios.Request) {
-    type SimpleJSONResponse struct {
-        Code    string `json:"code"`
-        Message string `json:"message"`
-    }
     req.SendJSON(SimpleJSONResponse{Code: "success", Message: "ok"}, http.StatusOK)
 }
 
