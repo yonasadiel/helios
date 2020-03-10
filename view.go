@@ -2,9 +2,11 @@ package helios
 
 import (
 	"encoding/json"
+	"errors"
 	"net"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -16,6 +18,7 @@ type Request interface {
 	DeserializeRequestData(obj interface{}) *APIError
 
 	GetURLParam(key string) string
+	GetURLParamUint(key string) (uint, error)
 
 	GetContextData(key string) interface{}
 	SetContextData(key string, value interface{})
@@ -68,9 +71,19 @@ func NewHTTPRequest(w http.ResponseWriter, r *http.Request) HTTPRequest {
 	}
 }
 
-// GetURLParam return the parameter of the request url
+// GetURLParam returns the parameter of the request url
 func (req *HTTPRequest) GetURLParam(key string) string {
 	return req.u[key]
+}
+
+// GetURLParamUint returns the parameter of the request url as unisgned int
+func (req *HTTPRequest) GetURLParamUint(key string) (uint, error) {
+	paramStr := req.u[key]
+	param64, errParseQuestionID := strconv.ParseUint(paramStr, 10, 32)
+	if errParseQuestionID != nil {
+		return uint(0), errors.New("Failed to parse param as uint")
+	}
+	return uint(param64), nil
 }
 
 // DeserializeRequestData deserializes the request body
@@ -184,6 +197,16 @@ func NewMockRequest() MockRequest {
 // GetURLParam returns the url param of given key
 func (req *MockRequest) GetURLParam(key string) string {
 	return req.URLParam[key]
+}
+
+// GetURLParamUint returns the parameter of the request url as unisgned int
+func (req *MockRequest) GetURLParamUint(key string) (uint, error) {
+	paramStr := req.URLParam[key]
+	param64, errParseQuestionID := strconv.ParseUint(paramStr, 10, 32)
+	if errParseQuestionID != nil {
+		return uint(0), errors.New("Failed to parse param as uint")
+	}
+	return uint(param64), nil
 }
 
 // DeserializeRequestData return the data of request

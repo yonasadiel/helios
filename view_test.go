@@ -47,8 +47,19 @@ func TestMockRequest(t *testing.T) {
 	req := NewMockRequest()
 
 	req.URLParam["abc"] = "def"
+	req.URLParam["one"] = "1"
+	req.URLParam["long"] = "123456789012345678901234567890"
 	assert.Equal(t, "def", req.GetURLParam("abc"), "Failed to retrieve url param")
 	assert.Equal(t, "", req.GetURLParam("def"), "Not found url param should return empty string")
+	oneParam, errOneParam := req.GetURLParamUint("one")
+	_, errTwoParam := req.GetURLParamUint("two")
+	_, errAbcParam := req.GetURLParamUint("abc")
+	_, errLongParam := req.GetURLParamUint("long")
+	assert.Equal(t, uint(1), oneParam, "Different result on uint url param")
+	assert.Nil(t, errOneParam, "Failed to parse uint url param")
+	assert.NotNil(t, errTwoParam, "Empty uint param will return error")
+	assert.NotNil(t, errAbcParam, "Not number param will return error")
+	assert.NotNil(t, errLongParam, "Long number param will return error")
 
 	var expected sampleRequest = sampleRequest{A: "def"}
 	var actual sampleRequest
@@ -125,6 +136,8 @@ func TestHTTPRequest(t *testing.T) {
 
 	urlParam := make(map[string]string)
 	urlParam["id"] = "3"
+	urlParam["abc"] = "def"
+	urlParam["long"] = "123456789012345678901234567890"
 
 	contextData := make(map[string]interface{})
 	contextData["abc"] = "random_context_data"
@@ -149,6 +162,15 @@ func TestHTTPRequest(t *testing.T) {
 	assert.Equal(t, "y", req.w.Header().Get("header-x"), "Different header set")
 
 	assert.Equal(t, "3", req.GetURLParam("id"), "Failed to retrive url param")
+	idParam, errIDParam := req.GetURLParamUint("id")
+	_, errOtherIDParam := req.GetURLParamUint("id2")
+	_, errAbcParam := req.GetURLParamUint("abc")
+	_, errLongParam := req.GetURLParamUint("long")
+	assert.Equal(t, uint(3), idParam, "Different result on uint url param")
+	assert.Nil(t, errIDParam, "Failed to parse uint url param")
+	assert.NotNil(t, errOtherIDParam, "Empty uint param will return error")
+	assert.NotNil(t, errAbcParam, "Not number param will return error")
+	assert.NotNil(t, errLongParam, "Long number param will return error")
 	assert.Equal(t, "random_context_data", req.GetContextData("abc"), "Failed to retrive context data")
 	assert.Equal(t, "ghi", req.GetContextData("def"), "Failed to retrive modified context data")
 	assert.Nil(t, req.GetContextData("ghi"), "Missing context data should treated as nil")
