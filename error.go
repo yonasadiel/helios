@@ -37,7 +37,10 @@ type FormError struct {
 }
 
 // AddFieldError pushes the errorMessage to the field's error list
-func (formError FormError) AddFieldError(fieldName string, errorMessage string) {
+func (formError *FormError) AddFieldError(fieldName string, errorMessage string) {
+	if len(formError.FieldError) == 0 {
+		formError.FieldError = make(map[string]([]string))
+	}
 	if _, ok := formError.FieldError[fieldName]; !ok {
 		formError.FieldError[fieldName] = make([]string, 0)
 	}

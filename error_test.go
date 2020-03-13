@@ -27,10 +27,8 @@ func TestAPIError(t *testing.T) {
 func TestFormError(t *testing.T) {
 	App.BeforeTest()
 
-	var err FormError = FormError{
-		FieldError:    make(map[string]([]string)),
-		NonFieldError: []string{"err1", "err2"},
-	}
+	var err FormError = FormError{}
+	err.NonFieldError = []string{"err1", "err2"}
 	err.AddFieldError("field1", "err3")
 	err.AddFieldError("field1", "err4")
 	err.AddFieldError("field2", "err5")
