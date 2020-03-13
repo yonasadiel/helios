@@ -34,3 +34,11 @@ var ErrUnsupportedContentType = APIError{
 	Code:       "unsupported_content_type",
 	Message:    "Currently, we are accepting application/json only",
 }
+
+// ErrJSONParseFailed will be returned when calling req.DeserializeRequestData
+// but with bad JSON. For example, int field that supplied with string
+var ErrJSONParseFailed = APIError{
+	StatusCode: http.StatusBadRequest,
+	Code:       "failed_to_parse_json",
+	Message:    "Failed to parse json request",
+}

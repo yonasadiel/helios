@@ -220,7 +220,7 @@ func (req *MockRequest) DeserializeRequestData(obj interface{}) *APIError {
 		decoder := json.NewDecoder(strings.NewReader(requestBody))
 		err := decoder.Decode(obj)
 		if err != nil {
-			return &ErrUnsupportedContentType
+			return &ErrJSONParseFailed
 		}
 		return nil
 	}
