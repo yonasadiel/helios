@@ -214,6 +214,17 @@ func (req *MockRequest) DeserializeRequestData(obj interface{}) *APIError {
 	if req.RequestData == nil {
 		return &ErrUnsupportedContentType
 	}
+
+	requestBody, ok := req.RequestData.(string)
+	if ok {
+		decoder := json.NewDecoder(strings.NewReader(requestBody))
+		err := decoder.Decode(obj)
+		if err != nil {
+			return &ErrUnsupportedContentType
+		}
+		return nil
+	}
+
 	result := reflect.ValueOf(obj).Elem()
 	result.Set(reflect.ValueOf(req.RequestData))
 	return nil

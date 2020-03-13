@@ -73,6 +73,11 @@ func TestMockRequest(t *testing.T) {
 	assert.Nil(t, errDeserialize2, "Failed to deserialize request data")
 	assert.Equal(t, expected, actual, "Differenet request data")
 
+	req.RequestData = "{\"a\":\"def\"}"
+	errDeserialize3 := req.DeserializeRequestData(&actual)
+	assert.Nil(t, errDeserialize3, "Failed to deserialize request data")
+	assert.Equal(t, expected, actual, "Differenet request data")
+
 	req.SetContextData("abc", 2)
 	req.SetContextData("abc", 3)
 	req.SetContextData("def", "ghi")
