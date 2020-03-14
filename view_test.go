@@ -80,11 +80,11 @@ func TestMockRequest(t *testing.T) {
 
 	req.RequestData = "{\"b\":\"def\"}"
 	errDeserialize4 := req.DeserializeRequestData(&actual)
-	assert.Equal(t, &ErrJSONParseFailed, errDeserialize4, "Failed to deserialize request data")
+	assert.Equal(t, ErrJSONParseFailed, errDeserialize4, "Failed to deserialize request data")
 
 	req.RequestData = "{\"a\":\"def"
 	errDeserialize5 := req.DeserializeRequestData(&actual)
-	assert.Equal(t, &ErrJSONParseFailed, errDeserialize5, "Invalid JSON")
+	assert.Equal(t, ErrJSONParseFailed, errDeserialize5, "Invalid JSON")
 
 	req.SetContextData("abc", 2)
 	req.SetContextData("abc", 3)
@@ -232,7 +232,7 @@ func TestHTTPRequestJSONPoorlyEncoded(t *testing.T) {
 	var requestData sampleRequest
 
 	err := req.DeserializeRequestData(&requestData)
-	assert.Equal(t, &ErrUnsupportedContentType, err, "Poorly encoded JSON should return Unsupported Content Type error")
+	assert.Equal(t, ErrUnsupportedContentType, err, "Poorly encoded JSON should return Unsupported Content Type error")
 }
 
 func TestHTTPRequestUrlFormEncoded(t *testing.T) {
@@ -252,7 +252,7 @@ func TestHTTPRequestUrlFormEncoded(t *testing.T) {
 	var requestData sampleRequest
 
 	err := req.DeserializeRequestData(&requestData)
-	assert.Equal(t, &ErrUnsupportedContentType, err, "application/x-www-form-urlencoded is not supported yet")
+	assert.Equal(t, ErrUnsupportedContentType, err, "application/x-www-form-urlencoded is not supported yet")
 }
 
 func TestHTTPRequestMultipartFormData(t *testing.T) {
@@ -287,7 +287,7 @@ func TestHTTPRequestMultipartFormData(t *testing.T) {
 	var requestData sampleRequest
 
 	err := req.DeserializeRequestData(&requestData)
-	assert.Equal(t, &ErrUnsupportedContentType, err, "multipart/form-data is not supported yet")
+	assert.Equal(t, ErrUnsupportedContentType, err, "multipart/form-data is not supported yet")
 }
 
 func TestHTTPRequestClientIP(t *testing.T) {

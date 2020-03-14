@@ -15,7 +15,7 @@ import (
 
 // Request interface of Helios Http Request Wrapper
 type Request interface {
-	DeserializeRequestData(obj interface{}) *APIError
+	DeserializeRequestData(obj interface{}) Error
 
 	GetURLParam(key string) string
 	GetURLParamUint(key string) (uint, error)
@@ -88,17 +88,17 @@ func (req *HTTPRequest) GetURLParamUint(key string) (uint, error) {
 
 // DeserializeRequestData deserializes the request body
 // and parse it into pointer to struct
-func (req *HTTPRequest) DeserializeRequestData(obj interface{}) *APIError {
+func (req *HTTPRequest) DeserializeRequestData(obj interface{}) Error {
 	contentType := req.r.Header.Get("Content-Type")
 	if contentType == "application/json" || contentType == "" {
 		decoder := json.NewDecoder(req.r.Body)
 		err := decoder.Decode(obj)
 		if err != nil {
-			return &ErrUnsupportedContentType
+			return ErrUnsupportedContentType
 		}
 		return nil
 	}
-	return &ErrUnsupportedContentType
+	return ErrUnsupportedContentType
 }
 
 // GetSessionData return the data of session with known key
@@ -210,9 +210,9 @@ func (req *MockRequest) GetURLParamUint(key string) (uint, error) {
 }
 
 // DeserializeRequestData return the data of request
-func (req *MockRequest) DeserializeRequestData(obj interface{}) *APIError {
+func (req *MockRequest) DeserializeRequestData(obj interface{}) Error {
 	if req.RequestData == nil {
-		return &ErrUnsupportedContentType
+		return ErrUnsupportedContentType
 	}
 
 	requestBody, ok := req.RequestData.(string)
@@ -220,7 +220,7 @@ func (req *MockRequest) DeserializeRequestData(obj interface{}) *APIError {
 		decoder := json.NewDecoder(strings.NewReader(requestBody))
 		err := decoder.Decode(obj)
 		if err != nil {
-			return &ErrJSONParseFailed
+			return ErrJSONParseFailed
 		}
 		return nil
 	}
