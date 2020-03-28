@@ -32,6 +32,7 @@ func (apiError APIError) GetStatusCode() int {
 
 // FormError is common error, usually after parsing the request body
 type FormError struct {
+	Code          string
 	FieldError    map[string]([]string)
 	NonFieldError []string
 }
@@ -62,7 +63,11 @@ func (formError FormError) GetMessage() map[string]interface{} {
 	messageFields["_error"] = nonFieldError
 
 	message := make(map[string]interface{})
-	message["code"] = "form_error"
+	if formError.Code == "" {
+		message["code"] = "form_error"
+	} else {
+		message["code"] = formError.Code
+	}
 	message["message"] = messageFields
 	return message
 }
