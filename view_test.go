@@ -232,7 +232,7 @@ func TestHTTPRequestJSONPoorlyEncoded(t *testing.T) {
 	var requestData sampleRequest
 
 	err := req.DeserializeRequestData(&requestData)
-	assert.Equal(t, ErrUnsupportedContentType, err, "Poorly encoded JSON should return Unsupported Content Type error")
+	assert.Equal(t, ErrJSONParseFailed, err, "Poorly encoded JSON should return Bad Request error")
 }
 
 func TestHTTPRequestUrlFormEncoded(t *testing.T) {

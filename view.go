@@ -94,7 +94,7 @@ func (req *HTTPRequest) DeserializeRequestData(obj interface{}) Error {
 		decoder := json.NewDecoder(req.r.Body)
 		err := decoder.Decode(obj)
 		if err != nil {
-			return ErrUnsupportedContentType
+			return ErrJSONParseFailed
 		}
 		return nil
 	}
