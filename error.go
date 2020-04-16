@@ -48,6 +48,11 @@ func (formError *FormError) AddFieldError(fieldName string, errorMessage string)
 	formError.FieldError[fieldName] = append(formError.FieldError[fieldName], errorMessage)
 }
 
+// AddNonFieldError pushes the errorMessage to the nonfield error list
+func (formError *FormError) AddNonFieldError(errorMessage string) {
+	formError.NonFieldError = append(formError.NonFieldError, errorMessage)
+}
+
 // GetFieldErrors returns the copy of message to shown as response body.
 // It is dictionary of string to list of errors, with field name as the key
 func (formError FormError) GetFieldErrors() map[string]([]string) {
@@ -82,6 +87,12 @@ func (formError FormError) GetMessage() map[string]interface{} {
 	}
 	message["message"] = messageFields
 	return message
+}
+
+// IsError returns true if there is at least one error,
+// and return false if there is no error on the struct
+func (formError FormError) IsError() bool {
+	return len(formError.FieldError) > 0 || len(formError.NonFieldError) > 0
 }
 
 // GetStatusCode returns HTTP 400 Bad Request code

@@ -28,14 +28,21 @@ func TestFormError(t *testing.T) {
 	App.BeforeTest()
 
 	var err FormError = FormError{}
-	err.NonFieldError = []string{"err1", "err2"}
+	assert.False(t, err.IsError())
+
+	err.AddNonFieldError("err1")
+	assert.True(t, err.IsError())
+
+	err.AddNonFieldError("err2")
 	err.AddFieldError("field1", "err3")
 	err.AddFieldError("field1", "err4")
 	err.AddFieldError("field2", "err5")
+	assert.True(t, err.IsError())
+
 	var errCasted Error
 	errCasted = err
 
-	assert.Equal(t, http.StatusBadRequest, err.GetStatusCode(), "Qrong status code")
+	assert.Equal(t, http.StatusBadRequest, err.GetStatusCode(), "Wrong status code")
 	var marshalError error
 	var res []byte
 
@@ -56,4 +63,11 @@ func TestFormError(t *testing.T) {
 	res, marshalError = json.Marshal(errCasted.GetMessage())
 	assert.Nil(t, marshalError, "Failed to json marshal")
 	assert.Equal(t, `{"code":"changed_error_code","message":{"_error":["err1","err2"],"field1":["err3","err4"],"field2":["err5"]}}`, string(res), "Different message")
+
+	var err2 FormError
+	res, marshalError = json.Marshal(err2.GetMessage())
+	assert.Nil(t, marshalError, "Failed to json marshal")
+	assert.Equal(t, `{"code":"form_error","message":{"_error":[]}}`, string(res), "Different message")
+	err2.AddFieldError("field3", "err6")
+	assert.True(t, err2.IsError())
 }
