@@ -48,19 +48,31 @@ func (formError *FormError) AddFieldError(fieldName string, errorMessage string)
 	formError.FieldError[fieldName] = append(formError.FieldError[fieldName], errorMessage)
 }
 
+// GetFieldErrors returns the copy of message to shown as response body.
+// It is dictionary of string to list of errors, with field name as the key
+func (formError FormError) GetFieldErrors() map[string]([]string) {
+	fieldsError := make(map[string]([]string))
+	for k, v := range formError.FieldError {
+		fieldError := make([]string, len(v))
+		copy(fieldError, v)
+		fieldsError[k] = fieldError
+	}
+	return fieldsError
+}
+
+// GetNonFieldErrors returns the copy of non field errors
+func (formError FormError) GetNonFieldErrors() []string {
+	nonFieldError := make([]string, len(formError.NonFieldError))
+	copy(nonFieldError, formError.NonFieldError)
+	return nonFieldError
+}
+
 // GetMessage returns the message to shown as response body
 // it will include code (unique identifier) and map as message
 // the message will contain field name as key and error as value
 func (formError FormError) GetMessage() map[string]interface{} {
-	messageFields := make(map[string]([]string))
-	for k, v := range formError.FieldError {
-		fieldErrors := make([]string, len(v))
-		copy(fieldErrors, v)
-		messageFields[k] = fieldErrors
-	}
-	nonFieldError := make([]string, len(formError.NonFieldError))
-	copy(nonFieldError, formError.NonFieldError)
-	messageFields["_error"] = nonFieldError
+	messageFields := formError.GetFieldErrors()
+	messageFields["_error"] = formError.GetNonFieldErrors()
 
 	message := make(map[string]interface{})
 	if formError.Code == "" {
