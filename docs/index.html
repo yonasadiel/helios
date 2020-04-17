@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)http://localhost:8888/pkg/github.com/yonasadiel/helios/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+
+  <title>helios - Go Documentation Server</title>
+
+<link type="text/css" rel="stylesheet" href="./index_files/style.css">
+
+<script>window.initFuncs = [];</script>
+<script src="./index_files/jquery.js" defer=""></script>
+
+
+
+<script>var goVersion = "go1.13.4";</script>
+<script src="./index_files/godocs.js" defer=""></script>
+</head>
+<body class="vsc-initialized">
+
+<div id="lowframe" style="position: fixed; bottom: 0; left: 0; height: 0; width: 100%; border-top: thin solid grey; background-color: white; overflow: auto;">
+...
+</div><!-- #lowframe -->
+
+<div id="topbar" class="wide"><div class="container">
+<div class="top-heading" id="heading-wide"><a href="http://localhost:8888/pkg/">Go Documentation Server</a></div>
+<div class="top-heading" id="heading-narrow"><a href="http://localhost:8888/pkg/">GoDoc</a></div>
+<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#" id="menu-button"><span id="menu-button-arrow">▽</span></a>
+<form method="GET" action="http://localhost:8888/search">
+<div id="menu" style="min-width: 60px;">
+
+<span class="search-box"><input type="search" id="search" name="q" placeholder="Search" aria-label="Search" required=""><button type="submit"><span><!-- magnifying glass: --><svg width="24" height="24" viewBox="0 0 24 24"><title>submit search</title><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></button></span>
+</div>
+</form>
+
+</div></div>
+
+
+
+<div id="page" class="wide" tabindex="-1" style="outline: 0px;">
+<div class="container">
+
+
+  <h1>
+    Package helios
+    <span class="text-muted"></span>
+  </h1>
+
+
+
+
+
+
+
+<div id="nav"></div>
+
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script>
+	document.ANALYSIS_DATA = null;
+	document.CALLGRAPH = null;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/yonasadiel/helios"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+				
+			</div>
+		</div>
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Handle">func Handle(f HTTPHandler) func(http.ResponseWriter, *http.Request)</a></dd>
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#WithMiddleware">func WithMiddleware(f HTTPHandler, m []Middleware) func(http.ResponseWriter, *http.Request)</a></dd>
+			
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Error">type Error</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI">type ErrorAPI</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.GetMessage">func (apiError ErrorAPI) GetMessage() map[string]interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.GetStatusCode">func (apiError ErrorAPI) GetStatusCode() int</a></dd>
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm">type ErrorForm</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm.GetMessage">func (formError ErrorForm) GetMessage() map[string]interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm.GetStatusCode">func (formError ErrorForm) GetStatusCode() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm.IsError">func (formError ErrorForm) IsError() bool</a></dd>
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormField">type ErrorFormField</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldArray">type ErrorFormFieldArray</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldArray.GetMessage">func (err ErrorFormFieldArray) GetMessage() interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldArray.IsError">func (err ErrorFormFieldArray) IsError() bool</a></dd>
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldAtomic">type ErrorFormFieldAtomic</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldAtomic.GetMessage">func (err ErrorFormFieldAtomic) GetMessage() interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldAtomic.IsError">func (err ErrorFormFieldAtomic) IsError() bool</a></dd>
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldNested">type ErrorFormFieldNested</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldNested.GetMessage">func (err ErrorFormFieldNested) GetMessage() interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldNested.IsError">func (err ErrorFormFieldNested) IsError() bool</a></dd>
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPHandler">type HTTPHandler</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">type HTTPRequest</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#NewHTTPRequest">func NewHTTPRequest(w http.ResponseWriter, r *http.Request) HTTPRequest</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.ClientIP">func (req *HTTPRequest) ClientIP() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.DeserializeRequestData">func (req *HTTPRequest) DeserializeRequestData(obj interface{}) Error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetContextData">func (req *HTTPRequest) GetContextData(key string) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetHeader">func (req *HTTPRequest) GetHeader(key string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetSessionData">func (req *HTTPRequest) GetSessionData(key string) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetURLParam">func (req *HTTPRequest) GetURLParam(key string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetURLParamUint">func (req *HTTPRequest) GetURLParamUint(key string) (uint, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SaveSession">func (req *HTTPRequest) SaveSession()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SendJSON">func (req *HTTPRequest) SendJSON(output interface{}, code int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SetContextData">func (req *HTTPRequest) SetContextData(key string, value interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SetHeader">func (req *HTTPRequest) SetHeader(key string, value string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SetSessionData">func (req *HTTPRequest) SetSessionData(key string, value interface{})</a></dd>
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios">type Helios</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.BeforeTest">func (app *Helios) BeforeTest()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.CloseDB">func (app *Helios) CloseDB()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.Initialize">func (app *Helios) Initialize() error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.Migrate">func (app *Helios) Migrate()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.RegisterModel">func (app *Helios) RegisterModel(model interface{})</a></dd>
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Middleware">type Middleware</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#CreateCORSMiddleware">func CreateCORSMiddleware(allowedOrigins []string) Middleware</a></dd>
+				
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">type MockRequest</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#NewMockRequest">func NewMockRequest() MockRequest</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.ClientIP">func (req *MockRequest) ClientIP() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.DeserializeRequestData">func (req *MockRequest) DeserializeRequestData(obj interface{}) Error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetContextData">func (req *MockRequest) GetContextData(key string) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetHeader">func (req *MockRequest) GetHeader(key string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetSessionData">func (req *MockRequest) GetSessionData(key string) interface{}</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetURLParam">func (req *MockRequest) GetURLParam(key string) string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetURLParamUint">func (req *MockRequest) GetURLParamUint(key string) (uint, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SaveSession">func (req *MockRequest) SaveSession()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SendJSON">func (req *MockRequest) SendJSON(output interface{}, code int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SetContextData">func (req *MockRequest) SetContextData(key string, value interface{})</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SetHeader">func (req *MockRequest) SetHeader(key string, value string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SetSessionData">func (req *MockRequest) SetSessionData(key string, value interface{})</a></dd>
+				
+			
+				
+				<dd><a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Request">type Request</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h3>Package files</h3>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="http://localhost:8888/src/github.com/yonasadiel/helios/app.go">app.go</a>
+			
+				<a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go">error.go</a>
+			
+				<a href="http://localhost:8888/src/github.com/yonasadiel/helios/middleware.go">middleware.go</a>
+			
+				<a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go">view.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		
+
+		
+		
+			<h2 id="pkg-variables">Variables <a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#pkg-variables">¶</a></h2>
+			
+				<p>
+DB is pointer to gorm.DB that can be used
+directly for ORM and database
+</p>
+
+				<pre>var <span id="DB">DB</span> *<a href="http://localhost:8888/pkg/github.com/jinzhu/gorm/">gorm</a>.<a href="http://localhost:8888/pkg/github.com/jinzhu/gorm/#DB">DB</a></pre>
+			
+				<p>
+ErrInternalServerError is general error that will be send
+if there is unexpected error on the server
+</p>
+
+				<pre>var <span id="ErrInternalServerError">ErrInternalServerError</span> = <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI">ErrorAPI</a>{
+    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.StatusCode">StatusCode</a>: <a href="http://localhost:8888/pkg/net/http/">http</a>.<a href="http://localhost:8888/pkg/net/http/#StatusInternalServerError">StatusInternalServerError</a>,
+    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.Code">Code</a>:       "internal_server_error",
+    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.Message">Message</a>:    "Error occured while processing the request",
+}</pre>
+			
+				<p>
+ErrJSONParseFailed will be returned when calling req.DeserializeRequestData
+but with bad JSON. For example, int field that supplied with string
+</p>
+
+				<pre>var <span id="ErrJSONParseFailed">ErrJSONParseFailed</span> = <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI">ErrorAPI</a>{
+    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.StatusCode">StatusCode</a>: <a href="http://localhost:8888/pkg/net/http/">http</a>.<a href="http://localhost:8888/pkg/net/http/#StatusBadRequest">StatusBadRequest</a>,
+    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.Code">Code</a>:       "failed_to_parse_json",
+    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.Message">Message</a>:    "Failed to parse json request",
+}</pre>
+			
+				<p>
+ErrUnsupportedContentType returned when request has content-type
+header that is unsupported
+</p>
+
+				<pre>var <span id="ErrUnsupportedContentType">ErrUnsupportedContentType</span> = <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI">ErrorAPI</a>{
+    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.StatusCode">StatusCode</a>: <a href="http://localhost:8888/pkg/net/http/">http</a>.<a href="http://localhost:8888/pkg/net/http/#StatusUnsupportedMediaType">StatusUnsupportedMediaType</a>,
+    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.Code">Code</a>:       "unsupported_content_type",
+    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.Message">Message</a>:    "Currently, we are accepting application/json only",
+}</pre>
+			
+		
+		
+			
+			
+			<h2 id="Handle">func <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=849:916#L32">Handle</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Handle">¶</a>
+				
+				
+			</h2>
+			<pre>func Handle(f <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPHandler">HTTPHandler</a>) func(<a href="http://localhost:8888/pkg/net/http/">http</a>.<a href="http://localhost:8888/pkg/net/http/#ResponseWriter">ResponseWriter</a>, *<a href="http://localhost:8888/pkg/net/http/">http</a>.<a href="http://localhost:8888/pkg/net/http/#Request">Request</a>)</pre>
+			<p>
+Handle the http request using the HTTPHandler, without middleware
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WithMiddleware">func <a href="http://localhost:8888/src/github.com/yonasadiel/helios/middleware.go?s=307:398#L3">WithMiddleware</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#WithMiddleware">¶</a>
+				
+				
+			</h2>
+			<pre>func WithMiddleware(f <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPHandler">HTTPHandler</a>, m []<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Middleware">Middleware</a>) func(<a href="http://localhost:8888/pkg/net/http/">http</a>.<a href="http://localhost:8888/pkg/net/http/#ResponseWriter">ResponseWriter</a>, *<a href="http://localhost:8888/pkg/net/http/">http</a>.<a href="http://localhost:8888/pkg/net/http/#Request">Request</a>)</pre>
+			<p>
+WithMiddleware wrapped the http request to Request object,
+pass it to middleware, start from first middleware in m to the last.
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Error">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=101:183#L1">Error</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Error">¶</a>
+				
+				
+			</h2>
+			<p>
+Error is interface of error that can be thrown
+for response
+</p>
+
+			<pre>type Error interface {
+    GetMessage() map[<a href="http://localhost:8888/pkg/builtin/#string">string</a>]interface{}
+    GetStatusCode() <a href="http://localhost:8888/pkg/builtin/#int">int</a>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ErrorAPI">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=233:311#L3">ErrorAPI</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI">¶</a>
+				
+				
+			</h2>
+			<p>
+ErrorAPI is standardized error of Charon app
+</p>
+
+			<pre>type ErrorAPI struct {
+<span id="ErrorAPI.StatusCode"></span>    StatusCode <a href="http://localhost:8888/pkg/builtin/#int">int</a>
+<span id="ErrorAPI.Code"></span>    Code       <a href="http://localhost:8888/pkg/builtin/#string">string</a>
+<span id="ErrorAPI.Message"></span>    Message    <a href="http://localhost:8888/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrorAPI.GetMessage">func (ErrorAPI) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=373:433#L10">GetMessage</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.GetMessage">¶</a>
+					
+					
+				</h3>
+				<pre>func (apiError <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI">ErrorAPI</a>) GetMessage() map[<a href="http://localhost:8888/pkg/builtin/#string">string</a>]interface{}</pre>
+				<p>
+GetMessage returns the message to shown as response body
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ErrorAPI.GetStatusCode">func (ErrorAPI) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=615:659#L19">GetStatusCode</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI.GetStatusCode">¶</a>
+					
+					
+				</h3>
+				<pre>func (apiError <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorAPI">ErrorAPI</a>) GetStatusCode() <a href="http://localhost:8888/pkg/builtin/#int">int</a></pre>
+				<p>
+GetStatusCode returns the http status code
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ErrorForm">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=762:893#L24">ErrorForm</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm">¶</a>
+				
+				
+			</h2>
+			<p>
+ErrorForm is common error, usually after parsing the request body
+</p>
+
+			<pre>type ErrorForm struct {
+<span id="ErrorForm.Code"></span>    Code              <a href="http://localhost:8888/pkg/builtin/#string">string</a>
+<span id="ErrorForm.ErrorFormField"></span>    ErrorFormField    <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldNested">ErrorFormFieldNested</a>
+<span id="ErrorForm.NonErrorFormField"></span>    NonErrorFormField <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldAtomic">ErrorFormFieldAtomic</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrorForm.GetMessage">func (ErrorForm) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=3958:4020#L120">GetMessage</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm.GetMessage">¶</a>
+					
+					
+				</h3>
+				<pre>func (formError <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm">ErrorForm</a>) GetMessage() map[<a href="http://localhost:8888/pkg/builtin/#string">string</a>]interface{}</pre>
+				<p>
+GetMessage returns the message to shown as response body
+it will include code (unique identifier) and map as message
+the message will contain field name as key and error as value
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ErrorForm.GetStatusCode">func (ErrorForm) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=4721:4767#L144">GetStatusCode</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm.GetStatusCode">¶</a>
+					
+					
+				</h3>
+				<pre>func (formError <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm">ErrorForm</a>) GetStatusCode() <a href="http://localhost:8888/pkg/builtin/#int">int</a></pre>
+				<p>
+GetStatusCode returns HTTP 400 Bad Request code
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ErrorForm.IsError">func (ErrorForm) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=4539:4580#L139">IsError</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm.IsError">¶</a>
+					
+					
+				</h3>
+				<pre>func (formError <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorForm">ErrorForm</a>) IsError() <a href="http://localhost:8888/pkg/builtin/#bool">bool</a></pre>
+				<p>
+IsError returns true if there is at least one error,
+and return false if there is no error on the struct
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ErrorFormField">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=1224:1299#L35">ErrorFormField</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormField">¶</a>
+				
+				
+			</h2>
+			<p>
+ErrorFormField is the interface of error for a field in a form. A field
+in a form can be:
+- an atomic field (ex: username, fullname), using ErrorFormFieldAtomic
+- an array field (ex: todos, checkboxes), using ErrorFormFieldArray
+- a nested field (ex: address consist of zip code, city), using ErrorFormFieldNested
+</p>
+
+			<pre>type ErrorFormField interface {
+    GetMessage() interface{}
+    IsError() <a href="http://localhost:8888/pkg/builtin/#bool">bool</a>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ErrorFormFieldArray">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=2277:2318#L64">ErrorFormFieldArray</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldArray">¶</a>
+				
+				
+			</h2>
+			<p>
+ErrorFormFieldArray is error representation of array field, example:
+</p>
+<pre>todosErr := ErrorFormFieldArray{ErrorFormFieldAtomic{"todo can't be empty"}, ErrorFormFieldAtomic{}, ErrorFormFieldAtomic{"todo is duplicate"}}
+// will be converted to json:
+[["todo can't be empty"],[],["todo is duplicate"]]
+</pre>
+
+			<pre>type ErrorFormFieldArray []<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormField">ErrorFormField</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrorFormFieldArray.GetMessage">func (ErrorFormFieldArray) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=2380:2435#L67">GetMessage</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldArray.GetMessage">¶</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldArray">ErrorFormFieldArray</a>) GetMessage() interface{}</pre>
+				<p>
+GetMessage returns json-friendly array copy of the error
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ErrorFormFieldArray.IsError">func (ErrorFormFieldArray) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=2665:2710#L77">IsError</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldArray.IsError">¶</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldArray">ErrorFormFieldArray</a>) IsError() <a href="http://localhost:8888/pkg/builtin/#bool">bool</a></pre>
+				<p>
+IsError returns true if there is at least one member with err.
+Tt will iterate all the member.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ErrorFormFieldAtomic">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=1573:1607#L44">ErrorFormFieldAtomic</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldAtomic">¶</a>
+				
+				
+			</h2>
+			<p>
+ErrorFormFieldAtomic is error representation of one field, example:
+</p>
+<pre>passwordErr := ErrorFormFieldAtomic{"password is too short". "password must include symbol"}
+// will be converted to json:
+["password is too short","password must include symbol"]
+</pre>
+
+			<pre>type ErrorFormFieldAtomic []<a href="http://localhost:8888/pkg/builtin/#string">string</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrorFormFieldAtomic.GetMessage">func (ErrorFormFieldAtomic) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=1673:1729#L47">GetMessage</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldAtomic.GetMessage">¶</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldAtomic">ErrorFormFieldAtomic</a>) GetMessage() interface{}</pre>
+				<p>
+GetMessage returns the json-friendly array copy of the error
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ErrorFormFieldAtomic.IsError">func (ErrorFormFieldAtomic) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=1886:1932#L56">IsError</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldAtomic.IsError">¶</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldAtomic">ErrorFormFieldAtomic</a>) IsError() <a href="http://localhost:8888/pkg/builtin/#bool">bool</a></pre>
+				<p>
+IsError returns true if there is any error
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ErrorFormFieldNested">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=3218:3269#L94">ErrorFormFieldNested</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldNested">¶</a>
+				
+				
+			</h2>
+			<p>
+ErrorFormFieldNested is error representation other field error mapped by field name, example:
+</p>
+<pre>addressErr := ErrorFormFieldNested{
+    "zipCode": ErrorFormFieldAtomic{"zip code is invalid"},
+    "city": ErrorFormFieldAtomic{"city can't be empty"},
+}
+// will be converted to json:
+{"city":["city can't be empty"],"zipCode":["zip code is invalid"]}
+</pre>
+
+			<pre>type ErrorFormFieldNested map[<a href="http://localhost:8888/pkg/builtin/#string">string</a>]<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormField">ErrorFormField</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ErrorFormFieldNested.GetMessage">func (ErrorFormFieldNested) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=3329:3385#L97">GetMessage</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldNested.GetMessage">¶</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldNested">ErrorFormFieldNested</a>) GetMessage() interface{}</pre>
+				<p>
+GetMessage returns json-friendly map copy of the error
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ErrorFormFieldNested.IsError">func (ErrorFormFieldNested) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/error.go?s=3607:3653#L107">IsError</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldNested.IsError">¶</a>
+					
+					
+				</h3>
+				<pre>func (err <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#ErrorFormFieldNested">ErrorFormFieldNested</a>) IsError() <a href="http://localhost:8888/pkg/builtin/#bool">bool</a></pre>
+				<p>
+IsError returns true if there is at least one member with err.
+It will iterate all the member.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="HTTPHandler">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=748:778#L29">HTTPHandler</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPHandler">¶</a>
+				
+				
+			</h2>
+			<p>
+HTTPHandler receive Helios wrapped request and ressponse
+</p>
+
+			<pre>type HTTPHandler func(<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Request">Request</a>)</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="HTTPRequest">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=1381:1516#L45">HTTPRequest</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">¶</a>
+				
+				
+			</h2>
+			<p>
+HTTPRequest wrapper of Helios Http Request
+r is the HTTP Request, containing request data
+w is the HTTP Response writer, to write HTTP reply
+s is the session of current request, using gorilla/sessions package
+c is the context of the current request, can be used for user data, etc
+u is the url params argument
+</p>
+
+			<pre>type HTTPRequest struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewHTTPRequest">func <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=1603:1674#L54">NewHTTPRequest</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#NewHTTPRequest">¶</a>
+					
+					
+				</h3>
+				<pre>func NewHTTPRequest(w <a href="http://localhost:8888/pkg/net/http/">http</a>.<a href="http://localhost:8888/pkg/net/http/#ResponseWriter">ResponseWriter</a>, r *<a href="http://localhost:8888/pkg/net/http/">http</a>.<a href="http://localhost:8888/pkg/net/http/#Request">Request</a>) <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a></pre>
+				<p>
+NewHTTPRequest wraps usual http request and response writer to HTTPRequest struct
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="HTTPRequest.ClientIP">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=4332:4373#L143">ClientIP</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.ClientIP">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) ClientIP() <a href="http://localhost:8888/pkg/builtin/#string">string</a></pre>
+				<p>
+ClientIP returns the original ip address of the request.
+First, it checks for X-Forwarded-For and X-Real-Ip http header
+(<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For</a>)
+If they are not present, return the http.Request.RemoteAddr
+The priority is: X-Forwarded-For, X-Real-Ip, RemoteAddr
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.DeserializeRequestData">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=2390:2459#L81">DeserializeRequestData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.DeserializeRequestData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) DeserializeRequestData(obj interface{}) <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Error">Error</a></pre>
+				<p>
+DeserializeRequestData deserializes the request body
+and parse it into pointer to struct
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.GetContextData">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=3104:3166#L105">GetContextData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetContextData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) GetContextData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) interface{}</pre>
+				<p>
+GetContextData return the data of session with known key
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.GetHeader">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=3503:3555#L120">GetHeader</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetHeader">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) GetHeader(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) <a href="http://localhost:8888/pkg/builtin/#string">string</a></pre>
+				<p>
+GetHeader gets the header of request
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.GetSessionData">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=2806:2868#L95">GetSessionData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetSessionData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) GetSessionData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) interface{}</pre>
+				<p>
+GetSessionData return the data of session with known key
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.GetURLParam">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=1853:1907#L65">GetURLParam</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetURLParam">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) GetURLParam(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) <a href="http://localhost:8888/pkg/builtin/#string">string</a></pre>
+				<p>
+GetURLParam returns the parameter of the request url
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.GetURLParamUint">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=2008:2073#L70">GetURLParamUint</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.GetURLParamUint">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) GetURLParamUint(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) (<a href="http://localhost:8888/pkg/builtin/#uint">uint</a>, <a href="http://localhost:8888/pkg/builtin/#error">error</a>)</pre>
+				<p>
+GetURLParamUint returns the parameter of the request url as unisgned int
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.SaveSession">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=3375:3412#L115">SaveSession</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SaveSession">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) SaveSession()</pre>
+				<p>
+SaveSession saves the session to the cookie
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.SendJSON">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=3776:3838#L130">SendJSON</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SendJSON">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) SendJSON(output interface{}, code <a href="http://localhost:8888/pkg/builtin/#int">int</a>)</pre>
+				<p>
+SendJSON write json as http response
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.SetContextData">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=3233:3302#L110">SetContextData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SetContextData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) SetContextData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>, value interface{})</pre>
+				<p>
+SetContextData set the data of session
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.SetHeader">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=3639:3698#L125">SetHeader</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SetHeader">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) SetHeader(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>, value <a href="http://localhost:8888/pkg/builtin/#string">string</a>)</pre>
+				<p>
+SetHeader sets the header of response writer
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="HTTPRequest.SetSessionData">func (*HTTPRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=2942:3011#L100">SetSessionData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest.SetSessionData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPRequest">HTTPRequest</a>) SetSessionData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>, value interface{})</pre>
+				<p>
+SetSessionData set the data of session
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Helios">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/app.go?s=204:278#L3">Helios</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios">¶</a>
+				
+				
+			</h2>
+			<p>
+Helios is the core of the apps
+</p>
+
+			<pre>type Helios struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}
+</pre>
+
+			
+
+			
+				<p>
+App will be the core app that has all the models
+and be the core of the server
+</p>
+
+				<pre>var <span id="App">App</span> <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios">Helios</a></pre>
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Helios.BeforeTest">func (*Helios) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/app.go?s=1210:1241#L47">BeforeTest</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.BeforeTest">¶</a>
+					
+					
+				</h3>
+				<pre>func (app *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios">Helios</a>) BeforeTest()</pre>
+				<p>
+BeforeTest has to be called everytime a test is run
+It will reset the database
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Helios.CloseDB">func (*Helios) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/app.go?s=948:976#L34">CloseDB</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.CloseDB">¶</a>
+					
+					
+				</h3>
+				<pre>func (app *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios">Helios</a>) CloseDB()</pre>
+				<p>
+CloseDB close the database connection
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Helios.Initialize">func (*Helios) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/app.go?s=526:563#L17">Initialize</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.Initialize">¶</a>
+					
+					
+				</h3>
+				<pre>func (app *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios">Helios</a>) Initialize() <a href="http://localhost:8888/pkg/builtin/#error">error</a></pre>
+				<p>
+Initialize the database to production database
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Helios.Migrate">func (*Helios) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/app.go?s=1028:1056#L39">Migrate</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.Migrate">¶</a>
+					
+					
+				</h3>
+				<pre>func (app *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios">Helios</a>) Migrate()</pre>
+				<p>
+Migrate migrate all the models
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Helios.RegisterModel">func (*Helios) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/app.go?s=810:861#L29">RegisterModel</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios.RegisterModel">¶</a>
+					
+					
+				</h3>
+				<pre>func (app *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Helios">Helios</a>) RegisterModel(model interface{})</pre>
+				<p>
+RegisterModel so the database will be migrated
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Middleware">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/middleware.go?s=126:171#L1">Middleware</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Middleware">¶</a>
+				
+				
+			</h2>
+			<p>
+Middleware is a function that receive an HTTPHandler
+and return new HTTPHandler
+</p>
+
+			<pre>type Middleware func(<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPHandler">HTTPHandler</a>) <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#HTTPHandler">HTTPHandler</a></pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="CreateCORSMiddleware">func <a href="http://localhost:8888/src/github.com/yonasadiel/helios/middleware.go?s=545:606#L10">CreateCORSMiddleware</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#CreateCORSMiddleware">¶</a>
+					
+					
+				</h3>
+				<pre>func CreateCORSMiddleware(allowedOrigins []<a href="http://localhost:8888/pkg/builtin/#string">string</a>) <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Middleware">Middleware</a></pre>
+				<p>
+CreateCORSMiddleware add Access-Control-Allow-Origin headers
+to the response.
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="MockRequest">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=4803:5104#L161">MockRequest</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">¶</a>
+				
+				
+			</h2>
+			<p>
+MockRequest is Request object that is mocked for testing purposes
+</p>
+
+			<pre>type MockRequest struct {
+<span id="MockRequest.RequestData"></span>    RequestData    interface{}
+<span id="MockRequest.RequestHeader"></span>    RequestHeader  map[<a href="http://localhost:8888/pkg/builtin/#string">string</a>]<a href="http://localhost:8888/pkg/builtin/#string">string</a>
+<span id="MockRequest.ResponseHeader"></span>    ResponseHeader map[<a href="http://localhost:8888/pkg/builtin/#string">string</a>]<a href="http://localhost:8888/pkg/builtin/#string">string</a>
+<span id="MockRequest.SessionData"></span>    SessionData    map[<a href="http://localhost:8888/pkg/builtin/#string">string</a>]interface{}
+<span id="MockRequest.ContextData"></span>    ContextData    map[<a href="http://localhost:8888/pkg/builtin/#string">string</a>]interface{}
+<span id="MockRequest.JSONResponse"></span>    JSONResponse   []<a href="http://localhost:8888/pkg/builtin/#byte">byte</a>
+<span id="MockRequest.StatusCode"></span>    StatusCode     <a href="http://localhost:8888/pkg/builtin/#int">int</a>
+<span id="MockRequest.URLParam"></span>    URLParam       map[<a href="http://localhost:8888/pkg/builtin/#string">string</a>]<a href="http://localhost:8888/pkg/builtin/#string">string</a>
+<span id="MockRequest.RemoteAddr"></span>    RemoteAddr     <a href="http://localhost:8888/pkg/builtin/#string">string</a>
+}
+</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewMockRequest">func <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=5209:5242#L175">NewMockRequest</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#NewMockRequest">¶</a>
+					
+					
+				</h3>
+				<pre>func NewMockRequest() <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a></pre>
+				<p>
+NewMockRequest returns new MockRequest with empty data
+RemoteAddr is set to 127.0.0.1 in default
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="MockRequest.ClientIP">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=7908:7949#L270">ClientIP</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.ClientIP">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) ClientIP() <a href="http://localhost:8888/pkg/builtin/#string">string</a></pre>
+				<p>
+ClientIP returns RemoteAddr data of req
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.DeserializeRequestData">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=6130:6199#L203">DeserializeRequestData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.DeserializeRequestData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) DeserializeRequestData(obj interface{}) <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Error">Error</a></pre>
+				<p>
+DeserializeRequestData return the data of request
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.GetContextData">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=6946:7008#L234">GetContextData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetContextData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) GetContextData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) interface{}</pre>
+				<p>
+GetContextData return the data of session with known key
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.GetHeader">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=7340:7392#L249">GetHeader</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetHeader">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) GetHeader(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) <a href="http://localhost:8888/pkg/builtin/#string">string</a></pre>
+				<p>
+GetHeader gets the header of request
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.GetSessionData">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=6642:6704#L224">GetSessionData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetSessionData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) GetSessionData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) interface{}</pre>
+				<p>
+GetSessionData return the data of session with known key
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.GetURLParam">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=5621:5675#L188">GetURLParam</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetURLParam">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) GetURLParam(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) <a href="http://localhost:8888/pkg/builtin/#string">string</a></pre>
+				<p>
+GetURLParam returns the url param of given key
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.GetURLParamUint">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=5783:5848#L193">GetURLParamUint</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.GetURLParamUint">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) GetURLParamUint(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) (<a href="http://localhost:8888/pkg/builtin/#uint">uint</a>, <a href="http://localhost:8888/pkg/builtin/#error">error</a>)</pre>
+				<p>
+GetURLParamUint returns the parameter of the request url as unisgned int
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.SaveSession">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=7253:7290#L244">SaveSession</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SaveSession">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) SaveSession()</pre>
+				<p>
+SaveSession do nothing because the session is already saved
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.SendJSON">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=7632:7694#L259">SendJSON</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SendJSON">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) SendJSON(output interface{}, code <a href="http://localhost:8888/pkg/builtin/#int">int</a>)</pre>
+				<p>
+SendJSON write json as http response
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.SetContextData">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=7085:7154#L239">SetContextData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SetContextData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) SetContextData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>, value interface{})</pre>
+				<p>
+SetContextData set the data of session
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.SetHeader">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=7494:7553#L254">SetHeader</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SetHeader">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) SetHeader(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>, value <a href="http://localhost:8888/pkg/builtin/#string">string</a>)</pre>
+				<p>
+SetHeader sets the header of response writer
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="MockRequest.SetSessionData">func (*MockRequest) <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=6781:6850#L229">SetSessionData</a>
+					<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest.SetSessionData">¶</a>
+					
+					
+				</h3>
+				<pre>func (req *<a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#MockRequest">MockRequest</a>) SetSessionData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>, value interface{})</pre>
+				<p>
+SetSessionData set the data of session
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Request">type <a href="http://localhost:8888/src/github.com/yonasadiel/helios/view.go?s=217:686#L7">Request</a>
+				<a class="permalink" href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Request">¶</a>
+				
+				
+			</h2>
+			<p>
+Request interface of Helios Http Request Wrapper
+</p>
+
+			<pre>type Request interface {
+    DeserializeRequestData(obj interface{}) <a href="http://localhost:8888/pkg/github.com/yonasadiel/helios/#Error">Error</a>
+
+    GetURLParam(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) <a href="http://localhost:8888/pkg/builtin/#string">string</a>
+    GetURLParamUint(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) (<a href="http://localhost:8888/pkg/builtin/#uint">uint</a>, <a href="http://localhost:8888/pkg/builtin/#error">error</a>)
+
+    GetContextData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) interface{}
+    SetContextData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>, value interface{})
+
+    GetSessionData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) interface{}
+    SetSessionData(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>, value interface{})
+    SaveSession()
+
+    ClientIP() <a href="http://localhost:8888/pkg/builtin/#string">string</a>
+
+    GetHeader(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>) <a href="http://localhost:8888/pkg/builtin/#string">string</a>
+    SetHeader(key <a href="http://localhost:8888/pkg/builtin/#string">string</a>, value <a href="http://localhost:8888/pkg/builtin/#string">string</a>)
+
+    SendJSON(output interface{}, code <a href="http://localhost:8888/pkg/builtin/#int">int</a>)
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+
+
+<div id="footer">
+Build version go1.13.4.<br>
+Except as <a href="https://developers.google.com/site-policies#restrictions">noted</a>,
+the content of this page is licensed under the
+Creative Commons Attribution 3.0 License,
+and code is licensed under a <a href="http://localhost:8888/LICENSE">BSD license</a>.<br>
+<a href="http://localhost:8888/doc/tos.html">Terms of Service</a> |
+<a href="http://www.google.com/intl/en/policies/privacy/">Privacy Policy</a>
+</div>
+
+</div><!-- .container -->
+</div><!-- #page -->
+
+
+</body></html>
