@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAPIError(t *testing.T) {
+func TestErrorAPI(t *testing.T) {
 	App.BeforeTest()
 
-	var err Error = APIError{
+	var err Error = ErrorAPI{
 		StatusCode: http.StatusNotFound,
 		Code:       "not_found",
 		Message:    "Not Found",
@@ -24,27 +24,27 @@ func TestAPIError(t *testing.T) {
 	assert.Equal(t, "Not Found", msg["message"], "Wrong message")
 }
 
-func TestFormError(t *testing.T) {
+func TestErrorForm(t *testing.T) {
 	App.BeforeTest()
 
 	type formErrorTestCase struct {
-		err                FormError
+		err                ErrorForm
 		expectedStatusCode int
 		expectedJSON       string
 		expectedIsError    bool
 	}
 	testCases := []formErrorTestCase{{
-		err:                FormError{},
+		err:                ErrorForm{},
 		expectedStatusCode: http.StatusBadRequest,
 		expectedJSON:       `{"code":"form_error","message":{"_error":[]}}`,
 		expectedIsError:    false,
 	}, {
-		err: FormError{
-			FieldError: NestedFieldError{
-				"field1": AtomicFieldError{},
-				"field2": ArrayFieldError{
-					AtomicFieldError{},
-					AtomicFieldError{},
+		err: ErrorForm{
+			ErrorFormField: ErrorFormFieldNested{
+				"field1": ErrorFormFieldAtomic{},
+				"field2": ErrorFormFieldArray{
+					ErrorFormFieldAtomic{},
+					ErrorFormFieldAtomic{},
 				},
 			},
 		},
@@ -52,31 +52,31 @@ func TestFormError(t *testing.T) {
 		expectedJSON:       `{"code":"form_error","message":{"_error":[],"field1":[],"field2":[[],[]]}}`,
 		expectedIsError:    false,
 	}, {
-		err:                FormError{Code: "custom_code"},
+		err:                ErrorForm{Code: "custom_code"},
 		expectedStatusCode: http.StatusBadRequest,
 		expectedJSON:       `{"code":"custom_code","message":{"_error":[]}}`,
 		expectedIsError:    false,
 	}, {
-		err: FormError{
-			NonFieldError: []string{"err1", "err2"},
+		err: ErrorForm{
+			NonErrorFormField: []string{"err1", "err2"},
 		},
 		expectedStatusCode: http.StatusBadRequest,
 		expectedJSON:       `{"code":"form_error","message":{"_error":["err1","err2"]}}`,
 		expectedIsError:    true,
 	}, {
-		err: FormError{
-			FieldError: NestedFieldError{
-				"atomic": AtomicFieldError{"err1", "err2"},
-				"array": ArrayFieldError{
-					NestedFieldError{
-						"field1": AtomicFieldError{"err3"},
-						"field2": ArrayFieldError{
-							AtomicFieldError{"err4", "err5"},
+		err: ErrorForm{
+			ErrorFormField: ErrorFormFieldNested{
+				"atomic": ErrorFormFieldAtomic{"err1", "err2"},
+				"array": ErrorFormFieldArray{
+					ErrorFormFieldNested{
+						"field1": ErrorFormFieldAtomic{"err3"},
+						"field2": ErrorFormFieldArray{
+							ErrorFormFieldAtomic{"err4", "err5"},
 						},
 					},
-					NestedFieldError{},
-					NestedFieldError{
-						"field1": AtomicFieldError{"err6"},
+					ErrorFormFieldNested{},
+					ErrorFormFieldNested{
+						"field1": ErrorFormFieldAtomic{"err6"},
 					},
 				},
 			},
@@ -86,10 +86,10 @@ func TestFormError(t *testing.T) {
 		expectedIsError:    true,
 	}}
 	for i, testCase := range testCases {
-		t.Logf("TestFormError testcase #%d", i)
+		t.Logf("TestErrorForm testcase #%d", i)
 		var jsonRepresentation []byte
 		var errMashalling error
-		var err Error = testCase.err // cast the FormError to Error
+		var err Error = testCase.err // cast the ErrorForm to Error
 		jsonRepresentation, errMashalling = json.Marshal(err.GetMessage())
 		assert.Nil(t, errMashalling)
 		assert.Equal(t, testCase.expectedStatusCode, err.GetStatusCode())
