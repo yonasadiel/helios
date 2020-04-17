@@ -39,6 +39,11 @@ func TestErrorForm(t *testing.T) {
 		expectedJSON:       `{"code":"form_error","message":{"_error":[]}}`,
 		expectedIsError:    false,
 	}, {
+		err:                NewErrorForm(),
+		expectedStatusCode: http.StatusBadRequest,
+		expectedJSON:       `{"code":"form_error","message":{"_error":[]}}`,
+		expectedIsError:    false,
+	}, {
 		err: ErrorForm{
 			FieldError: ErrorFormFieldNested{
 				"field1": ErrorFormFieldAtomic{},

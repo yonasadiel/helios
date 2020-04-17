@@ -37,6 +37,15 @@ type ErrorForm struct {
 	NonFieldError ErrorFormFieldAtomic
 }
 
+// NewErrorForm returns new empty ErrorForm
+func NewErrorForm() ErrorForm {
+	return ErrorForm{
+		Code:          "form_error",
+		FieldError:    make(ErrorFormFieldNested),
+		NonFieldError: make(ErrorFormFieldAtomic, 0),
+	}
+}
+
 // ErrorFormField is the interface of error for a field in a form. A field
 // in a form can be:
 // - an atomic field (ex: username, fullname), using ErrorFormFieldAtomic
