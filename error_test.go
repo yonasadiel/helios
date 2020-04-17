@@ -40,7 +40,7 @@ func TestErrorForm(t *testing.T) {
 		expectedIsError:    false,
 	}, {
 		err: ErrorForm{
-			ErrorFormField: ErrorFormFieldNested{
+			FieldError: ErrorFormFieldNested{
 				"field1": ErrorFormFieldAtomic{},
 				"field2": ErrorFormFieldArray{
 					ErrorFormFieldAtomic{},
@@ -58,14 +58,14 @@ func TestErrorForm(t *testing.T) {
 		expectedIsError:    false,
 	}, {
 		err: ErrorForm{
-			NonErrorFormField: []string{"err1", "err2"},
+			NonFieldError: []string{"err1", "err2"},
 		},
 		expectedStatusCode: http.StatusBadRequest,
 		expectedJSON:       `{"code":"form_error","message":{"_error":["err1","err2"]}}`,
 		expectedIsError:    true,
 	}, {
 		err: ErrorForm{
-			ErrorFormField: ErrorFormFieldNested{
+			FieldError: ErrorFormFieldNested{
 				"atomic": ErrorFormFieldAtomic{"err1", "err2"},
 				"array": ErrorFormFieldArray{
 					ErrorFormFieldNested{

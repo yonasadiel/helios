@@ -32,9 +32,9 @@ func (apiError ErrorAPI) GetStatusCode() int {
 
 // ErrorForm is common error, usually after parsing the request body
 type ErrorForm struct {
-	Code              string
-	ErrorFormField    ErrorFormFieldNested
-	NonErrorFormField ErrorFormFieldAtomic
+	Code          string
+	FieldError    ErrorFormFieldNested
+	NonFieldError ErrorFormFieldAtomic
 }
 
 // ErrorFormField is the interface of error for a field in a form. A field
@@ -129,10 +129,10 @@ func (err ErrorFormFieldNested) IsError() bool {
 // the message will contain field name as key and error as value
 func (formError ErrorForm) GetMessage() map[string]interface{} {
 	messageFields := make(map[string]interface{})
-	for k, v := range formError.ErrorFormField {
+	for k, v := range formError.FieldError {
 		messageFields[k] = v.GetMessage()
 	}
-	messageFields["_error"] = formError.NonErrorFormField.GetMessage()
+	messageFields["_error"] = formError.NonFieldError.GetMessage()
 
 	message := make(map[string]interface{})
 	if formError.Code == "" {
@@ -147,7 +147,7 @@ func (formError ErrorForm) GetMessage() map[string]interface{} {
 // IsError returns true if there is at least one error,
 // and return false if there is no error on the struct
 func (formError ErrorForm) IsError() bool {
-	return formError.ErrorFormField.IsError() || formError.NonErrorFormField.IsError()
+	return formError.FieldError.IsError() || formError.NonFieldError.IsError()
 }
 
 // GetStatusCode returns HTTP 400 Bad Request code
