@@ -118,6 +118,9 @@ func TestMockRequest(t *testing.T) {
 	assert.Equal(t, expectedResponse, string(req.JSONResponse), "Different JSON Response")
 	assert.Equal(t, 499, req.StatusCode, "Different Response status code")
 
+	req.SendJSON(make(chan int), 200)
+	assert.Equal(t, http.StatusInternalServerError, req.StatusCode, "Failed to marshalling json")
+
 	assert.Equal(t, "127.0.0.1", req.ClientIP(), "Default for ClientIP is 127.0.0.1")
 	req.RemoteAddr = "1.2.3.4"
 	assert.Equal(t, "1.2.3.4", req.ClientIP(), "ClientIP() should returns the RemoteAddr attribute")

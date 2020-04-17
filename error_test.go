@@ -27,47 +27,73 @@ func TestAPIError(t *testing.T) {
 func TestFormError(t *testing.T) {
 	App.BeforeTest()
 
-	var err FormError = FormError{}
-	assert.False(t, err.IsError())
-
-	err.AddNonFieldError("err1")
-	assert.True(t, err.IsError())
-
-	err.AddNonFieldError("err2")
-	err.AddFieldError("field1", "err3")
-	err.AddFieldError("field1", "err4")
-	err.AddFieldError("field2", "err5")
-	assert.True(t, err.IsError())
-
-	var errCasted Error
-	errCasted = err
-
-	assert.Equal(t, http.StatusBadRequest, err.GetStatusCode(), "Wrong status code")
-	var marshalError error
-	var res []byte
-
-	res, marshalError = json.Marshal(err.GetFieldErrors())
-	assert.Nil(t, marshalError, "Failed to json marshal")
-	assert.Equal(t, `{"field1":["err3","err4"],"field2":["err5"]}`, string(res), "Different message")
-
-	res, marshalError = json.Marshal(err.GetNonFieldErrors())
-	assert.Nil(t, marshalError, "Failed to json marshal")
-	assert.Equal(t, `["err1","err2"]`, string(res), "Different message")
-
-	res, marshalError = json.Marshal(errCasted.GetMessage())
-	assert.Nil(t, marshalError, "Failed to json marshal")
-	assert.Equal(t, `{"code":"form_error","message":{"_error":["err1","err2"],"field1":["err3","err4"],"field2":["err5"]}}`, string(res), "Different message")
-
-	err.Code = "changed_error_code"
-	errCasted = err
-	res, marshalError = json.Marshal(errCasted.GetMessage())
-	assert.Nil(t, marshalError, "Failed to json marshal")
-	assert.Equal(t, `{"code":"changed_error_code","message":{"_error":["err1","err2"],"field1":["err3","err4"],"field2":["err5"]}}`, string(res), "Different message")
-
-	var err2 FormError
-	res, marshalError = json.Marshal(err2.GetMessage())
-	assert.Nil(t, marshalError, "Failed to json marshal")
-	assert.Equal(t, `{"code":"form_error","message":{"_error":[]}}`, string(res), "Different message")
-	err2.AddFieldError("field3", "err6")
-	assert.True(t, err2.IsError())
+	type formErrorTestCase struct {
+		err                FormError
+		expectedStatusCode int
+		expectedJSON       string
+		expectedIsError    bool
+	}
+	testCases := []formErrorTestCase{{
+		err:                FormError{},
+		expectedStatusCode: http.StatusBadRequest,
+		expectedJSON:       `{"code":"form_error","message":{"_error":[]}}`,
+		expectedIsError:    false,
+	}, {
+		err: FormError{
+			FieldError: NestedFieldError{
+				"field1": AtomicFieldError{},
+				"field2": ArrayFieldError{
+					AtomicFieldError{},
+					AtomicFieldError{},
+				},
+			},
+		},
+		expectedStatusCode: http.StatusBadRequest,
+		expectedJSON:       `{"code":"form_error","message":{"_error":[],"field1":[],"field2":[[],[]]}}`,
+		expectedIsError:    false,
+	}, {
+		err:                FormError{Code: "custom_code"},
+		expectedStatusCode: http.StatusBadRequest,
+		expectedJSON:       `{"code":"custom_code","message":{"_error":[]}}`,
+		expectedIsError:    false,
+	}, {
+		err: FormError{
+			NonFieldError: []string{"err1", "err2"},
+		},
+		expectedStatusCode: http.StatusBadRequest,
+		expectedJSON:       `{"code":"form_error","message":{"_error":["err1","err2"]}}`,
+		expectedIsError:    true,
+	}, {
+		err: FormError{
+			FieldError: NestedFieldError{
+				"atomic": AtomicFieldError{"err1", "err2"},
+				"array": ArrayFieldError{
+					NestedFieldError{
+						"field1": AtomicFieldError{"err3"},
+						"field2": ArrayFieldError{
+							AtomicFieldError{"err4", "err5"},
+						},
+					},
+					NestedFieldError{},
+					NestedFieldError{
+						"field1": AtomicFieldError{"err6"},
+					},
+				},
+			},
+		},
+		expectedStatusCode: http.StatusBadRequest,
+		expectedJSON:       `{"code":"form_error","message":{"_error":[],"array":[{"field1":["err3"],"field2":[["err4","err5"]]},{},{"field1":["err6"]}],"atomic":["err1","err2"]}}`,
+		expectedIsError:    true,
+	}}
+	for i, testCase := range testCases {
+		t.Logf("TestFormError testcase #%d", i)
+		var jsonRepresentation []byte
+		var errMashalling error
+		var err Error = testCase.err // cast the FormError to Error
+		jsonRepresentation, errMashalling = json.Marshal(err.GetMessage())
+		assert.Nil(t, errMashalling)
+		assert.Equal(t, testCase.expectedStatusCode, err.GetStatusCode())
+		assert.Equal(t, testCase.expectedIsError, testCase.err.IsError())
+		assert.Equal(t, testCase.expectedJSON, string(jsonRepresentation))
+	}
 }

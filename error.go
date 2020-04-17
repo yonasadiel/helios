@@ -33,51 +33,106 @@ func (apiError APIError) GetStatusCode() int {
 // FormError is common error, usually after parsing the request body
 type FormError struct {
 	Code          string
-	FieldError    map[string]([]string)
-	NonFieldError []string
+	FieldError    NestedFieldError
+	NonFieldError AtomicFieldError
 }
 
-// AddFieldError pushes the errorMessage to the field's error list
-func (formError *FormError) AddFieldError(fieldName string, errorMessage string) {
-	if len(formError.FieldError) == 0 {
-		formError.FieldError = make(map[string]([]string))
+// FieldError is the interface of error for a field in a form. A field
+// in a form can be:
+// - an atomic field (ex: username, fullname), using AtomicFieldError
+// - an array field (ex: todos, checkboxes), using ArrayFieldError
+// - a nested field (ex: address consist of zip code, city), using NestedFieldError
+type FieldError interface {
+	GetMessage() interface{}
+	IsError() bool
+}
+
+// AtomicFieldError is error representation of one field, example:
+// passwordErr := AtomicFieldError{"password is too short". "password must include symbol"}
+// will converted to json:
+// ["password is too short", "password must include symbol"]
+type AtomicFieldError []string
+
+// GetMessage returns the json-friendly array copy of the error
+func (err AtomicFieldError) GetMessage() interface{} {
+	message := make([]string, 0)
+	for _, e := range err {
+		message = append(message, e)
 	}
-	if _, ok := formError.FieldError[fieldName]; !ok {
-		formError.FieldError[fieldName] = make([]string, 0)
+	return message
+}
+
+// IsError returns true if there is any error
+func (err AtomicFieldError) IsError() bool {
+	return len(err) > 0
+}
+
+// ArrayFieldError is error representation of array field, example:
+// todosErr := ArrayFieldError{AtomicFieldError{"todo can't be empty"}, AtomicFieldError{}, AtomicFieldError{"todo is duplicate"}}
+// will converted to json:
+// [["todo can't be empty"],[],["todo is duplicate"]]
+type ArrayFieldError []FieldError
+
+// GetMessage returns json-friendly array copy of the error
+func (err ArrayFieldError) GetMessage() interface{} {
+	message := make([]interface{}, 0)
+	for _, e := range err {
+		message = append(message, e.GetMessage())
 	}
-	formError.FieldError[fieldName] = append(formError.FieldError[fieldName], errorMessage)
+	return message
 }
 
-// AddNonFieldError pushes the errorMessage to the nonfield error list
-func (formError *FormError) AddNonFieldError(errorMessage string) {
-	formError.NonFieldError = append(formError.NonFieldError, errorMessage)
-}
-
-// GetFieldErrors returns the copy of message to shown as response body.
-// It is dictionary of string to list of errors, with field name as the key
-func (formError FormError) GetFieldErrors() map[string]([]string) {
-	fieldsError := make(map[string]([]string))
-	for k, v := range formError.FieldError {
-		fieldError := make([]string, len(v))
-		copy(fieldError, v)
-		fieldsError[k] = fieldError
+// IsError returns true if there is at least one member with err.
+// Tt will iterate all the member.
+func (err ArrayFieldError) IsError() bool {
+	var isError bool = false
+	for _, e := range err {
+		if e.IsError() {
+			isError = true
+		}
 	}
-	return fieldsError
+	return isError
 }
 
-// GetNonFieldErrors returns the copy of non field errors
-func (formError FormError) GetNonFieldErrors() []string {
-	nonFieldError := make([]string, len(formError.NonFieldError))
-	copy(nonFieldError, formError.NonFieldError)
-	return nonFieldError
+// NestedFieldError is error representation other field error mapped by field name, example:
+// addressErr := NestedFieldError{
+//   "zipCode": AtomicFieldError{"zip code is invalid"},
+//   "city": AtomicFieldError{"city can't be empty"},
+// }
+// will converted to json:
+// {"city":["city can't be empty"],"zipCode":["zip code is invalid"]}
+type NestedFieldError map[string]FieldError
+
+// GetMessage returns json-friendly map copy of the error
+func (err NestedFieldError) GetMessage() interface{} {
+	message := make(map[string]interface{})
+	for k, v := range err {
+		message[k] = v.GetMessage()
+	}
+	return message
+}
+
+// IsError returns true if there is at least one member with err.
+// It will iterate all the member.
+func (err NestedFieldError) IsError() bool {
+	var isError bool = false
+	for _, v := range err {
+		if v.IsError() {
+			isError = true
+		}
+	}
+	return isError
 }
 
 // GetMessage returns the message to shown as response body
 // it will include code (unique identifier) and map as message
 // the message will contain field name as key and error as value
 func (formError FormError) GetMessage() map[string]interface{} {
-	messageFields := formError.GetFieldErrors()
-	messageFields["_error"] = formError.GetNonFieldErrors()
+	messageFields := make(map[string]interface{})
+	for k, v := range formError.FieldError {
+		messageFields[k] = v.GetMessage()
+	}
+	messageFields["_error"] = formError.NonFieldError.GetMessage()
 
 	message := make(map[string]interface{})
 	if formError.Code == "" {
@@ -92,7 +147,7 @@ func (formError FormError) GetMessage() map[string]interface{} {
 // IsError returns true if there is at least one error,
 // and return false if there is no error on the struct
 func (formError FormError) IsError() bool {
-	return len(formError.FieldError) > 0 || len(formError.NonFieldError) > 0
+	return formError.FieldError.IsError() || formError.NonFieldError.IsError()
 }
 
 // GetStatusCode returns HTTP 400 Bad Request code
